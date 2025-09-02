@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36121.58
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SGR", "SGR\SGR.csproj", "{BA671DEB-99B6-4A41-B394-0587CD57873C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BA671DEB-99B6-4A41-B394-0587CD57873C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA671DEB-99B6-4A41-B394-0587CD57873C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA671DEB-99B6-4A41-B394-0587CD57873C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA671DEB-99B6-4A41-B394-0587CD57873C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C53431EA-41E9-4BB4-A21A-BFCBF795AB76}
+	EndGlobalSection
+EndGlobal

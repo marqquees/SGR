@@ -1,0 +1,24 @@
+<div class="modal fade show" style="display: block;" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header @(IsSuccess ? "bg-success" : "bg-danger") text-white">
+                <h5 class="modal-title">@(IsSuccess ? "Sucesso" : "Erro")</h5>
+                <button type="button" class="btn-close btn-close-white" @onclick="OnClose"></button>
+            </div>
+            <div class="modal-body">
+                <p>@Message</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn @(IsSuccess ? "btn-success" : "btn-secondary")" @onclick="OnClose">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public bool IsSuccess { get; set; }
+    [Parameter] public string Message { get; set; } = string.Empty;
+    [Parameter] public EventCallback OnClose { get; set; }
+}

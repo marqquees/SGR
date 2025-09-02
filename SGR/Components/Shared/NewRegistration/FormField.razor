@@ -1,0 +1,16 @@
+@using System.Linq.Expressions
+
+<div class="@Class mb-3">
+    <label class="form-label">@Label</label>
+    <div>
+        @ChildContent
+    </div>
+    <ValidationMessage For="@For" class="text-danger" />
+</div>
+
+@code {
+    [Parameter] public string Class { get; set; } = string.Empty;
+    [Parameter] public string Label { get; set; } = string.Empty;
+    [Parameter] public Expression<Func<object>> For { get; set; } = null!;
+    [Parameter] public RenderFragment ChildContent { get; set; } = null!;
+}
