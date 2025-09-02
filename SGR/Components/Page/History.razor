@@ -1,0 +1,179 @@
+@page "/"
+@rendermode InteractiveServer
+
+@using SGR.Models
+@using SGR.Service
+@using SGR.Components.Shared.History
+
+@inject OperationService Operation
+@inject ExportToPdf PdfExporter
+@inject ModalManager ModalManager
+
+<PageTitle>Histórico</PageTitle>
+
+<div class="container">
+    @if (_isLoading)
+    {
+        <div class="d-flex justify-content-center my-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Carregando...</span>
+            </div>
+        </div>
+    }
+    else if (!_equipment.Any())
+    {
+        <div class="alert alert-info" role="alert">
+            Nenhum equipamento encontrado no histórico.
+        </div>
+    }
+    else
+    {
+        <EquipmentList Equipment="@_equipment"/>
+    }
+
+    @if (_selectedEquipment != null)
+    {
+        <DetailModal 
+            Item="@_selectedEquipment"
+            IsEditing="@_isEditing"
+            OnDelete="@((item) => ModalManager.ConfirmDelete(item))"
+            OnSave="@SaveItem"
+            OnExportPdf="@((item) => PdfExporter.ExportInventoryToPdfAndNavigate(item))"
+            OnClose="@ModalManager.CloseModal"
+            OnEdit="@ModalManager.EnableEditing" />
+    }
+
+    @if (_showDeleteConfirm)
+    {
+        <DeleteConfirmationModal
+            ItemId="_equipmentToDelete?.Id"
+            OnConfirm="DeleteItem"
+            OnCancel="ModalManager.CancelDelete" />
+    }
+
+    @if (!string.IsNullOrEmpty(_errorMessage))
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @_errorMessage
+            <button type="button" class="btn-close" @onclick="() => _errorMessage = null" aria-label="Fechar"></button>
+        </div>
+    }
+</div>
+
+@code {
+    private List<Equipment> _equipment = [];
+    private string? _errorMessage;
+    private Equipment? _selectedEquipment;
+    private Equipment? _equipmentToDelete;
+    private Equipment? _originalEquipment;
+    private bool _isLoading = true;
+    private bool _isEditing; 
+    private bool _showDeleteConfirm;
+
+    /// <summary>  
+    /// Método executado na inicialização do componente.  
+    /// </summary>  
+    protected override async Task OnInitializedAsync()  
+    {  
+        try 
+        {
+            // Subscrever as alterações de estado do ModalManager.
+            ModalManager.StateChanged += OnModalStateChanged;  
+
+            _isLoading = true;
+            _equipment = await Operation.ListEquipmentAsync();
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = $"Erro ao lista os Equipamentos do Histórico: {ex.Message}";
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }  
+
+    /// <summary>
+    /// Método utilizando para atualizar as variáveis locais em relação a mudança do ModalManager.
+    /// </summary>
+    private void OnModalStateChanged()
+    {
+        // Sincroniza as variáveis locais com as propriedades do ModalManager.
+        _selectedEquipment = ModalManager.SelectedItem;
+        _equipmentToDelete = ModalManager.ItemToDelete;
+        _originalEquipment = ModalManager.OriginalItem;
+        _isEditing = ModalManager.IsEditing;
+        _showDeleteConfirm = ModalManager.ShowDeleteConfirm;
+
+        //Força a atualização da UI.
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Método responsável por salvar as alterções do equipamento selecionado.
+    /// </summary>
+    private async Task SaveItem(Equipment equipment)
+    {
+        try
+        {
+            bool result = await Operation.SaveEquipmentAsync(equipment);
+            if (result)
+            {
+                // Atualiza a lista ap�s salvamento bem-sucedido.
+                _equipment = await Operation.ListEquipmentAsync();
+
+                // Fecha o modal ap�s salvar com sucesso.
+                ModalManager.CloseModal();
+            }
+            else
+            {
+                _errorMessage = "N�o foi poss�vel salvar as altera��es. Verifique os dados e tente novamente.";
+            }
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = $"Erro ao salvar o item: {ex.Message}";
+        }
+    }
+
+    /// <summary>
+    /// Método responsável por eliminar o equipamento selecionado.
+    /// </summary>
+    private async Task DeleteItem()
+    {
+        try
+        {
+            if (ModalManager.ItemToDelete != null)
+            {
+                bool result = await Operation.DeleteEquipmentAsync(ModalManager.ItemToDelete);
+                if (result)
+                {
+                    // Atualiza a lista após exclusão bem-sucedida.
+                    _equipment = await Operation.ListEquipmentAsync();
+                    
+                    // Fecha o modal de detalhes.
+                    ModalManager.CloseModal(); 
+                    // Fecha o modal de confirma��o de exclusão.
+                    _showDeleteConfirm = false;
+                }
+                else
+                {
+                    _errorMessage = "Não foi possível excluir o item. Tente novamente.";
+                    // Apenas fecha o modal de confirmação em caso de erro.
+                    ModalManager.CancelDelete();
+                }
+            }
+            else
+            {
+                // Se não houver item para excluir, apenas fechar o modal de confirmação.
+                ModalManager.CancelDelete();
+            }
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = $"Erro ao excluir item: {ex.Message}";
+            // Apenas fecha o modal de confirmação em caso de erro.
+            ModalManager.CancelDelete(); 
+        }
+    }
+}
