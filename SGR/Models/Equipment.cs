@@ -15,32 +15,44 @@ namespace SGR.Models
     {
         [Key]
         public int Id { get; set; }
+
         public DateOnly DateRegister { get; set; }
-        [MaxLength(20), Required(ErrorMessage = "Este campo é obrigatório.")]
-        public string State { get; set; } = string.Empty;
-        [MaxLength(50), Required(ErrorMessage = "Este campo é obrigatório.")]
+        
+        [Required(ErrorMessage = "Este campo é obrigatório.")]
+        public string? State { get; set; }
+        
+        [Required(ErrorMessage = "Este campo é obrigatório.")]
         public string? Customer { get; set; }
-        [MaxLength(50)]
+        
         public string? User { get; set; }
-        [MaxLength(20), Required(ErrorMessage = "Este campo é obrigatório.")]
-        public string Category { get; set; } = string.Empty;
-        [MaxLength(30), Required(ErrorMessage = "Este campo é obrigatório.")]
-        public string Brand { get; set; } = string.Empty;
-        [StringLength(30, ErrorMessage = "Este campo não pode exceder 30 caracteres.")]
+        
+        [Required(ErrorMessage = "Este campo é obrigatório.")]
+        public string? Category { get; set; }
+        
+        [Required(ErrorMessage = "Este campo é obrigatório.")]
+        public string? Brand { get; set; }
+
+        [Required(ErrorMessage = "Este campo é obrigatório.")]
         public string? Model { get; set; }
-        [StringLength(20, ErrorMessage = "Este campo não pode exceder 20 caracteres.")]
+        
+        [Required(ErrorMessage = "Este campo é obrigatório.")]
         public string? SerialNumber { get; set; }
-        [MaxLength(30)]
+
+        [Required(ErrorMessage = "Este campo é obrigatório.")]
         public string? Processor { get; set; }
-        [MaxLength(15)]
+
+        [Required(ErrorMessage = "Este campo é obrigatório.")]
         public string? MemoryRAM { get; set; }
-        [MaxLength(15)]
+       
+        [Required(ErrorMessage = "Este campo é obrigatório.")]
         public string? Storage { get; set; }
-        [MaxLength(20)]
+
+        [Required(ErrorMessage = "Este campo é obrigatório.")]
         public string? OperatingSystem { get; set; }
-        [StringLength(500, ErrorMessage = "Este campo não pode exceder 500 caracteres.")]
+        
         public string? Note { get; set; }
-        [MaxLength(30), Required(ErrorMessage = "Este campo é obrigatório.")]
+        
+        [Required(ErrorMessage = "Este campo é obrigatório.")]
         public string? Responsible { get; set; }
     }
 }

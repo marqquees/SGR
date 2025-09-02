@@ -23,7 +23,6 @@ namespace SGR.Models
         /// </summary>
         public static readonly IReadOnlyList<string> Customer =
         [
-            "Indefinido",
             "RuIIuR",
             "AFG",
             "ContruMadeira",

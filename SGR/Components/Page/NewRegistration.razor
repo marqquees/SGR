@@ -9,146 +9,39 @@
 
 <PageTitle>Novo Registo</PageTitle>
 
-<div class="container">
-    <EditForm Model="@_equipment" OnValidSubmit="AddInventoryItem" FormName="newRegistrationForm">
-        <DataAnnotationsValidator /> 
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-11 col-xl-12">
+            <EditForm Model="@_equipment" OnValidSubmit="AddEquipment" FormName="newRegistrationForm" class="needs-validation">
+                <DataAnnotationsValidator />
 
-        <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Controlo</h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <FormField Class="col-lg-4 col-md-6 col-sm-12" Label="Data do Registro" For="@(() => _equipment.DateRegister)">
-                        <InputDate @bind-Value="_equipment.DateRegister" class="form-control" id="dateRegister" />
-                    </FormField>
+                <Form Equipment="_equipment" />
 
-                    <FormField Class="col-lg-4 col-md-6 col-sm-12" Label="Estado do Equipamento" For="@(() => _equipment.State)">
-                        <InputSelect @bind-Value="_equipment.State" class="form-control" id="state">
-                            @foreach (var state in RegistrationOption.State)
-                            {
-                                <option value="@state">@state</option>
-                            }
-                        </InputSelect>
-                    </FormField>
+                <div class="card-body">
+                    <div class="d-flex gap-2 justify-content-end">
+                        <button type="button" class="btn btn-outline-secondary" @onclick="ClearForm">
+                            <i class="bi bi-x-circle"></i> Limpar
+                        </button>
 
-                    <FormField Class="col-lg-4 col-md-12 col-sm-12" Label="Responsável" For="@(() => _equipment.Responsible)">
-                        <InputSelect @bind-Value="_equipment.Responsible" class="form-control" id="responsible">
-                            @foreach (var responsible in RegistrationOption.Responsible)
-                            {
-                                <option value="@responsible">@responsible</option>
-                            }
-                        </InputSelect>
-                    </FormField> 
-                </div>
-            </div>
-        </div>
-
-        <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Detalhes do Equipamento</h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <FormField Class="col-lg-4 col-md-6 col-sm-12" Label="Cliente" For="@(() => _equipment.Customer)">
-                        <InputSelect @bind-Value="_equipment.Customer" class="form-control" id="customer">
-                            @foreach (var customer in RegistrationOption.Customer)
-                            {
-                                <option value="@customer">@customer</option>
-                            }
-                        </InputSelect>
-                    </FormField>
-
-                    <FormField Class="col-lg-4 col-md-6 col-sm-12" Label="Utilizador" For="@(() => _equipment.User)">
-                        <InputText @bind-Value="_equipment.User" class="form-control" id="user" />
-                    </FormField>
-
-                    <FormField Class="col-lg-4 col-md-12 col-sm-12" Label="Categoria" For="@(() => _equipment.Category)">
-                        <InputSelect @bind-Value="_equipment.Category" class="form-control" id="category">
-                            @foreach (var category in RegistrationOption.Category)
-                            {
-                                <option value="@category">@category</option>
-                            }
-                        </InputSelect>
-                    </FormField>
-                </div>
-
-                <div class="row mt-3">
-                    <FormField Class="col-lg-4 col-md-6 col-sm-12" Label="Marca" For="@(() => _equipment.Brand)">
-                        <InputSelect @bind-Value="_equipment.Brand" class="form-control" id="brand">
-                            @foreach (var brand in RegistrationOption.Brand)
-                            {
-                                <option value="@brand">@brand</option>
-                            }
-                        </InputSelect>
-                    </FormField>
-
-                    <FormField Class="col-lg-4 col-md-6 col-sm-12" Label="Modelo" For="@(() => _equipment.Model)">
-                        <InputText @bind-Value="_equipment.Model" class="form-control" id="model" />
-                    </FormField>
-
-                    <FormField Class="col-lg-4 col-md-12 col-sm-12" Label="Número de Série" For="@(() => _equipment.SerialNumber)">
-                        <InputText @bind-Value="_equipment.SerialNumber" class="form-control" id="serialNumber" />
-                    </FormField>
-                </div>
-            </div>
-        </div>
-
-        <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Especificações Técnicas</h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <FormField Class="col-xl-3 col-lg-6 col-md-6 col-sm-12" Label="Processador" For="@(() => _equipment.Processor)">
-                        <InputText @bind-Value="_equipment.Processor" class="form-control" id="processor" />
-                    </FormField>
-
-                    <FormField Class="col-xl-3 col-lg-6 col-md-6 col-sm-12" Label="Memória RAM" For="@(() => _equipment.MemoryRAM)">
-                        <InputText @bind-Value="_equipment.MemoryRAM" class="form-control" id="memoryRam" />
-                    </FormField>
-
-                    <FormField Class="col-xl-3 col-lg-6 col-md-6 col-sm-12" Label="Armazenamento" For="@(() => _equipment.Storage)">
-                        <InputText @bind-Value="_equipment.Storage" class="form-control" id="storage" />
-                    </FormField>
-
-                    <FormField Class="col-xl-3 col-lg-6 col-md-6 col-sm-12" Label="Sistema Operativo" For="@(() => _equipment.OperatingSystem)">
-                        <InputText @bind-Value="_equipment.OperatingSystem" class="form-control" id="operatingSystem" />
-                    </FormField>
-                </div>
-            </div>
-        </div>
-
-        <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Manutenção</h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <FormField Class="col-12" Label="Observação" For="@(() => _equipment.Note)">
-                        <InputTextArea @bind-Value="_equipment.Note" class="form-control" rows="2" id="note" />
-                    </FormField>
-                </div>
-                <div class="mt-4">
-                    <div class="btn-group-responsive">
                         <button type="submit" class="btn btn-primary">
                             @if (_isLoading)
                             {
-                                <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
                                 <span>Salvando...</span>
                             }
                             else
                             {
+                                <i class="bi bi-check-circle"></i>
+                            
                                 <span>Salvar</span>
                             }
                         </button>
-                        <button type="button" class="btn btn-secondary" @onclick="ClearForm">Limpar</button>
                     </div>
                 </div>
-            </div>
+            </EditForm>
         </div>
-    </EditForm>
-    
+    </div>
+   
     @if (_showMessage)
     {
         <MessageModal IsSuccess="@_isSuccess" Message="@_message" OnClose="@CloseMessageModal" />
@@ -156,25 +49,16 @@
 </div>
 
 @code {
-    //private RegistrationAlert _inventory = new();
     private Equipment _equipment = new();
     private string? _message;
     private bool _isSuccess;
     private bool _isLoading;
     private bool _showMessage;
 
-    /// <summary>  
-    /// Método executado na inicialização do componente.  
-    /// </summary>  
-    protected override void OnInitialized()
-    {  
-        _equipment.DateRegister = DateOnly.FromDateTime(DateTime.Today);
-    }
-
     /// <summary>
     /// Método responsável por adicionar um novo equipamento.
     /// </summary>
-    private async Task AddInventoryItem()
+    private async Task AddEquipment()
     {
         try
         {
@@ -217,11 +101,12 @@
     private void ClearForm()
     {
         _equipment = new Equipment();
-
         _message = string.Empty;
         _isSuccess = false;
         _showMessage = false;
+
         StateHasChanged();
+        OnInitialized();
     }
 
     /// <summary>
