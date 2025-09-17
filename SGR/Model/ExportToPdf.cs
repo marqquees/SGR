@@ -4,10 +4,10 @@ using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using System.Collections.Concurrent;
 
-namespace SGR.Models
+namespace SGR.Model
 {
     /// <summary>
-    /// Classe responsável por exportar detalhes de um equipamento para PDF.
+    /// Classe responsável por exportar os detalhes de um equipamento para PDF.
     /// </summary>
     /// <remarks>
     /// Inicializa uma nova instância da classe <see cref="ExportToPdf"/>.
@@ -28,7 +28,7 @@ namespace SGR.Models
         /// </summary>
         /// <param name="selectedItem">O item de inventário a ser exportado para PDF.</param>
         /// <returns>String contendo o caminho do arquivo ou mensagem de erro.</returns>
-        public async Task<string> ExportInventoryToPdfAndNavigate(Equipment? selectedItem)
+        public async Task<string> ExportEquipmentToPdfAndNavigate(Equipment? selectedItem)
         {
             try
             {
@@ -36,7 +36,7 @@ namespace SGR.Models
                     return "Erro: item não selecionado.";
 
                 // Gera o PDF e obtém o caminho do arquivo.
-                string result = await ExportInventoryToPdf(selectedItem);
+                string result = await ExportEquipmentToPdf(selectedItem);
 
                 // Se o resultado começar com "/temp-pdf/", navega para o arquivo.
                 if (result.StartsWith("/temp-pdf/"))
@@ -44,15 +44,15 @@ namespace SGR.Models
 
                 return result;
             }
-            catch (Exception ex)
+            catch (Exception error)
             {
-                return $"Erro ao exportar PDF: {ex.Message}";
+                return $"Erro ao exportar o arquivo PDF: {error.Message}";
             }
         }
         /// <summary>
         /// Metodo responsável por exportar os detalhes do equipamento para PDF.
         /// </summary>
-        public async Task<string> ExportInventoryToPdf(Equipment? selectedItem)
+        public async Task<string> ExportEquipmentToPdf(Equipment? selectedItem)
         {
             try
             {
@@ -94,9 +94,9 @@ namespace SGR.Models
                 // Retorna o caminho relativo do arquivo para download.
                 return $"/temp-pdf/{fileName}";
             }
-            catch (Exception ex)
+            catch (Exception error)
             {
-                return $"Erro ao gerar PDF: {ex.Message}";
+                return $"Erro ao gerar PDF: {error.Message}";
             }
         }
 
@@ -109,7 +109,8 @@ namespace SGR.Models
             {
                 row.RelativeItem().Column(column =>
                 {
-                    if (item != null) column.Item().Text($"Detalhes do Equipamento #{item.Id}").FontSize(20).Bold();
+                    if (item != null)
+                        column.Item().Text($"Detalhes do Equipamento #{item.Id}").FontSize(20).Bold();
                     column.Item().Text($"Data de geração: {DateTime.Now:dd/MM/yyyy}").FontSize(10);
                 });
             });
@@ -118,7 +119,7 @@ namespace SGR.Models
         /// <summary>
         /// Método responsável por compor o conteúdo do PDF com as informações do equipamento.
         /// </summary>
-        private static void ComposeContent(IContainer container, Equipment? item)
+        private static void ComposeContent(IContainer container, Equipment? equipment)
         {
             container.PaddingVertical(10).Column(column =>
             {
@@ -135,9 +136,9 @@ namespace SGR.Models
                     });
 
                     table.Cell().Text("Data de Registro").Bold();
-                    table.Cell().Text(item?.DateRegister.ToString("dd/MM/yyyy"));
+                    table.Cell().Text(equipment?.DateRegister.ToString("dd/MM/yyyy"));
                     table.Cell().Text("Estado").Bold();
-                    table.Cell().Text(item?.State);
+                    table.Cell().Text(equipment?.State);
                 });
 
                 column.Item().Height(20);
@@ -155,17 +156,17 @@ namespace SGR.Models
                     });
 
                     table.Cell().Text("Cliente").Bold();
-                    table.Cell().Text(item?.Customer);
+                    table.Cell().Text(equipment?.Customer);
                     table.Cell().Text("Utilizador").Bold();
-                    table.Cell().Text(item?.User);
+                    table.Cell().Text(equipment?.User);
                     table.Cell().Text("Categoria").Bold();
-                    table.Cell().Text(item?.Category);
+                    table.Cell().Text(equipment?.Category);
                     table.Cell().Text("Marca").Bold();
-                    table.Cell().Text(item?.Brand);
+                    table.Cell().Text(equipment?.Brand);
                     table.Cell().Text("Modelo").Bold();
-                    table.Cell().Text(item?.Model);
+                    table.Cell().Text(equipment?.Model);
                     table.Cell().Text("Número de Série").Bold();
-                    table.Cell().Text(item?.SerialNumber);
+                    table.Cell().Text(equipment?.SerialNumber);
                 });
 
                 column.Item().Height(20);
@@ -183,13 +184,13 @@ namespace SGR.Models
                     });
 
                     table.Cell().Text("Processador").Bold();
-                    table.Cell().Text(item?.Processor);
+                    table.Cell().Text(equipment?.Processor);
                     table.Cell().Text("Memória RAM").Bold();
-                    table.Cell().Text(item?.MemoryRAM);
+                    table.Cell().Text(equipment?.MemoryRAM);
                     table.Cell().Text("Armazenamento").Bold();
-                    table.Cell().Text(item?.Storage);
+                    table.Cell().Text(equipment?.Storage);
                     table.Cell().Text("Sistema Operativo").Bold();
-                    table.Cell().Text(item?.OperatingSystem);
+                    table.Cell().Text(equipment?.OperatingSystem);
                 });
 
                 column.Item().Height(20);
@@ -207,12 +208,12 @@ namespace SGR.Models
                     });
 
                     table.Cell().Text("Responsável").Bold();
-                    table.Cell().Text(item?.Responsible);
+                    table.Cell().Text(equipment?.Responsible);
                 });
 
                 column.Item().Height(10);
                 column.Item().Text("Observação").Bold();
-                column.Item().Text(item?.Note);
+                column.Item().Text(equipment?.Note);
             });
         }
 

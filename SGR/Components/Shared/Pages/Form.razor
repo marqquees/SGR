@@ -1,9 +1,13 @@
-@using SGR.Models
+﻿@using SGR.Model
 
+@inject NavigationManager Navigation
+
+<!-- Secção: Controlo -->
 <div class="card mb-4">
     <div class="card-header bg-primary text-white">
         <h5 class="mb-0">Controlo</h5>
     </div>
+
     <div class="card-body">
         <div class="row g-3">
             <div class="col-md-4">
@@ -16,14 +20,14 @@
                 <InputSelect @bind-Value="Equipment.State" class="form-select">
                     @foreach (var state in RegistrationOption.State)
                     {
-                        <option>@state</option>
+                        <option value="@state">@state</option>
                     }
                 </InputSelect>
                 <ValidationMessage For="@(() => Equipment.State)" class="text-danger small" />
             </div>
 
             <div class="col-md-4">
-                <label class="form-label fw-bold">Respons�vel</label>
+                <label class="form-label fw-bold">Responsável</label>
                 <InputSelect @bind-Value="Equipment.Responsible" class="form-select">
                     @foreach (var responsible in RegistrationOption.Responsible)
                     {
@@ -36,6 +40,7 @@
     </div>
 </div>
 
+<!-- Secção: Detalhes do Equipamento -->
 <div class="card mb-4">
     <div class="card-header bg-primary text-white">
         <h5 class="mb-0">Detalhes do Equipamento</h5>
@@ -90,7 +95,7 @@
             </div>
 
             <div class="col-md-4">
-                <label class="form-label fw-bold">N�mero de S�rie</label>
+                <label class="form-label fw-bold">Número de Série</label>
                 <InputText @bind-Value="Equipment.SerialNumber" class="form-control" />
                 <ValidationMessage For="@(() => Equipment.SerialNumber)" class="text-danger small" />
             </div>
@@ -98,9 +103,10 @@
     </div>
 </div>
 
+<!-- Secção: Especificações Técnicas -->
 <div class="card mb-4">
     <div class="card-header bg-primary text-white">
-        <h5 class="mb-0">Especifica��es T�cnicas</h5>
+        <h5 class="mb-0">Especificações Técnicas</h5>
     </div>
     <div class="card-body">
         <div class="row g-2">
@@ -111,7 +117,7 @@
             </div>
 
             <div class="col-md-3">
-                <label class="form-label fw-bold">Mem�ria RAM</label>
+                <label class="form-label fw-bold">Memória RAM</label>
                 <InputText @bind-Value="Equipment.MemoryRAM" class="form-control" />
                 <ValidationMessage For="@(() => Equipment.MemoryRAM)" class="text-danger small" />
             </div>
@@ -131,28 +137,75 @@
     </div>
 </div>
 
+<!-- Secção: Manutenção -->
 <div class="card mb-4">
     <div class="card-header bg-primary text-white">
-        <h5 class="mb-0">Manuten��o</h5>
+        <h5 class="mb-0">Manutenção</h5>
     </div>
     <div class="card-body">
         <div class="row g-4">
             <div class="col-12">
-                <label class="form-label fw-bold">Observa��es</label>
-                <InputTextArea @bind-Value="Equipment.Note" class="form-control" rows="5"
-                               placeholder="Observa��es adicionais, entre outras..." />
+                <label class="form-label fw-bold">Observação</label>
+                <InputTextArea 
+                    @bind-Value="Equipment.Note" 
+                    class="form-control" 
+                    rows="5"
+                    placeholder="Observações adicionais, entre outras..." />
             </div>
         </div>
     </div>
 </div>
 
-@code {
+<!-- Botões de Ação -->
+<div class="card-body">
+    <div class="d-flex gap-2 justify-content-end">
+        @if (ShowCancelButton)
+        {
+            <button type="button" class="btn btn-outline-secondary" @onclick="Cancel">
+                <i class="bi bi-arrow-left"></i> Cancelar
+            </button>
+        }
 
+        <button type="button" class="btn btn-outline-secondary" @onclick="ClearForm">
+            <i class="bi bi-x-circle"></i> Limpar
+        </button>
+
+        <button type="submit" class="btn btn-primary">
+            @if (Loading)
+            {
+                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                <span>@PrimaryButtonText...</span>
+            }
+            else
+            {
+                <i class="bi bi-check-circle"></i>
+                <span>@SecondaryButtonText</span>
+            }
+        </button>
+    </div>
+</div>
+
+@code {
     [Parameter] public Equipment Equipment { get; set; } = new();
+    [Parameter] public bool Loading { get; set; }
+    [Parameter] public string? PrimaryButtonText { get; set; }
+    [Parameter] public string? SecondaryButtonText { get; set; }
+    [Parameter] public bool ShowCancelButton { get; set; }
 
     protected override void OnInitialized()
     {
         if (Equipment.DateRegister == default(DateOnly))
             Equipment.DateRegister = DateOnly.FromDateTime(DateTime.Today);
+    }
+
+    public void ClearForm()
+    {
+        Equipment = new();
+        OnInitialized();
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo("/");
     }
 }

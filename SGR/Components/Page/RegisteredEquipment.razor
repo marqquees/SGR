@@ -1,0 +1,104 @@
+@page "/"
+@rendermode InteractiveServer
+
+@using SGR.Components.Shared.Pages
+@using SGR.Components.Shared.Pages.RegisteredEquipment
+@using SGR.Model
+@using SGR.Service
+
+@inject EquipmentOperation Operation
+@inject ModalManager Modal
+
+<PageTitle>Equipamentos Registados</PageTitle>
+
+@if (!_equipment.Any())
+{
+    <div class="alert alert-info" role="alert">
+        Nenhum equipamento registado.
+    </div>
+}
+else
+{
+    <ListEquipment Equipment="@_equipment" 
+        Delete="@((equipment) => Modal.ConfirmRemove(equipment))" />
+}
+
+@if (_showRemoveConfirm)
+{
+    <RemoveConfirmationModal 
+        Id="_equipmentToRemove?.Id" 
+        Remove="RemoveEquipment" 
+        Cancel="Modal.CancelRemove" />
+}
+
+@if (!string.IsNullOrEmpty(_errorMessage))
+{
+     <InfoModal Message="@_errorMessage" />
+}
+
+@code {
+    private List<Equipment> _equipment = [];
+    private Equipment? _equipmentToRemove;
+    private string? _errorMessage;
+    private bool _showRemoveConfirm;
+
+    /// <summary>  
+    /// Método executado na inicialização do componente.  
+    /// </summary>  
+    protected override async Task OnInitializedAsync()  
+    {  
+        try 
+        {
+            // Subscreve as mudanças de estado do modal.
+            Modal.StateChanged += ModalStateChanged;
+
+            _equipment = await Operation.ListEquipmentAsync();
+        }
+        catch (Exception error)
+        {
+            _errorMessage = $"Erro ao listar os Equipamentos Registados: {error.Message}";
+        }
+    }  
+
+    /// <summary>
+    /// Método responsável por atualizar o estado do modal de confirmação de remoção.
+    /// </summary>
+    private void ModalStateChanged()
+    {
+        _equipmentToRemove = Modal.EquipmentToRemove;
+        _showRemoveConfirm = Modal.ShowRemoveConfirm;
+    }
+
+    /// <summary>
+    /// Método responsável por eliminar o equipamento selecionado.
+    /// </summary>
+    private async Task RemoveEquipment()
+    {
+        try
+        {
+            if (Modal.EquipmentToRemove != null)
+            {
+                bool result = await Operation.RemoveEquipmentAsync(Modal.EquipmentToRemove);
+                if (result)
+                {
+                    Modal.CancelRemove();
+
+                    // Atualiza a lista após exclusão bem-sucedida.
+                    _equipment = await Operation.ListEquipmentAsync();
+                }
+                else
+                {
+                    _errorMessage = $"Não foi possível remover o equipamento {_equipmentToRemove?.Id}. Tente novamente.";
+                }
+            }
+            else
+            {
+                Modal.CancelRemove();
+            }
+        }
+        catch (Exception error)
+        {
+            _errorMessage = $"Erro ao remover o equipamento {_equipmentToRemove?.Id}: {error.Message}";
+        }
+    }
+}

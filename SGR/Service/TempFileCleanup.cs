@@ -1,4 +1,4 @@
-using SGR.Models;
+using SGR.Model;
 
 namespace SGR.Service
 {
@@ -6,12 +6,12 @@ namespace SGR.Service
     /// Serviço em segundo plano responsavel por eliminar arquivos .PDF temporários.
     /// </summary>
     /// <remarks>
-    /// Inicializa uma nova instancia da classe <see cref="TempFileCleanupService"/>.
+    /// Inicializa uma nova instancia da classe <see cref="TempFileCleanup"/>.
     /// </remarks>
     /// <param name="logger">Logger para registrar informações e erros.</param>
-    public class TempFileCleanupService(ILogger<TempFileCleanupService> logger) : BackgroundService
+    public class TempFileCleanup(ILogger<TempFileCleanup> logger) : BackgroundService
     {
-        private readonly ILogger<TempFileCleanupService> _logger = logger;
+        private readonly ILogger<TempFileCleanup> _logger = logger;
         private readonly TimeSpan _deleteAfter = TimeSpan.FromMinutes(5);
         private readonly TimeSpan _checkInterval = TimeSpan.FromMinutes(1440);
 
@@ -30,9 +30,9 @@ namespace SGR.Service
                 {
                     await CleanupTempFiles();
                 }
-                catch (Exception ex)
+                catch (Exception error)
                 {
-                    _logger.LogError("Erro ao limpar arquivos temporários. Detalhes: {ex.Messagem}", ex.Message);
+                    _logger.LogError(error, "Erro ao limpar arquivos temporários. Detalhes: {error.Messagem}", error.Message);
                 }
 
                 // Aguarda o intervalo de verificação antes de executar novamente.
@@ -59,13 +59,10 @@ namespace SGR.Service
                         File.Delete(file.Key);
                         _logger.LogInformation("Arquivo temporário excluído: {FilePath}", file.Key);
                     }
-
-                    // Remove o arquivo do dicionário, independentemente da sua existência.
-                    ExportToPdf.RemoveFromTempFiles(file.Key);
                 }
-                catch (Exception ex)
+                catch (Exception error)
                 {
-                    _logger.LogError(ex, "Erro ao excluir arquivo temporário: {FilePath}", file.Key);
+                    _logger.LogError(error, "Erro ao excluir arquivo temporário: {FilePath}", file.Key);
                 }
             }
             return Task.CompletedTask;

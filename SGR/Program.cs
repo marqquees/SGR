@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SGR.Components;
 using SGR.Data;
-using SGR.Models;
 using SGR.Service;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,13 +14,11 @@ builder.Services.AddDbContext<EquipmentContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectionWindows")));
 
 // Serviço de Gerenciamento do Inventário.
-builder.Services.AddScoped<OperationService>();
+builder.Services.AddScoped<EquipmentOperation>();
 // Serviço Gerenciador de Modais para a interface do usuário.
 builder.Services.AddScoped<ModalManager>();
-// Serviço de Exportação de Dados para ficheiros em PDF.
-builder.Services.AddScoped<ExportToPdf>(); 
 // Serviço de Limpeza de Arquivos Temporários.
-builder.Services.AddHostedService<TempFileCleanupService>();
+builder.Services.AddHostedService<TempFileCleanup>();
 
 var app = builder.Build();
 

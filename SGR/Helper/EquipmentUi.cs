@@ -3,7 +3,7 @@
     /// <summary>
     /// Classe responsável por auxiliar na renderização da interface do Estado do Equipamento.
     /// </summary>
-    public static class HistoryUi
+    public static class EquipmentUi
     {
         // Mapeamento estático das classes de estilo para cada estado.
         private static readonly Dictionary<string, string> StateBadgeClasses = new()
@@ -28,11 +28,11 @@
 
             // Normaliza o estado removendo espaços extras e convertendo para maiúsculas.
             var normalizedState = state.Trim().ToUpperInvariant();
-            
+
             // Verifica se o estado existe no dicionário.
             if (StateBadgeClasses.TryGetValue(normalizedState, out string? badgeClass))
                 return badgeClass;
-            
+
             // Retorna a classe padrão se não encontrar.
             return "bg-secondary text-white";
         }

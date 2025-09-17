@@ -31,7 +31,6 @@ namespace SGR.Helper
             },
             {
                 "ENTREGUE AO CLIENTE",
-                // Permite reabrir caso necessário.
                 new List<string> { "AVARIADO" }
             }
         };
@@ -52,21 +51,21 @@ namespace SGR.Helper
         /// </summary>
         /// <param name="currentState">Estado atual do equipamento.</param>
         /// <param name="newState">Novo estado desejado.</param>
-        /// <returns>True se a transição for válida, False caso contrário.</returns>
+        /// <returns>True se a transição for válida, false caso contrário.</returns>
         public static bool IsValidTransition(string currentState, string newState)
         {
             if (string.IsNullOrWhiteSpace(currentState) || string.IsNullOrWhiteSpace(newState))
                 return false;
 
             // Normaliza os estados para comparação.
-            var normalizedCurrentState = currentState.Trim().ToUpperInvariant();
-            var normalizedNewState = newState.Trim().ToUpperInvariant();
+            string normalizedCurrentState = currentState.Trim().ToUpperInvariant();
+            string normalizedNewState = newState.Trim().ToUpperInvariant();
 
             // Permite manter o mesmo estado.
             if (normalizedCurrentState == normalizedNewState)
                 return true;
 
-            var validStates = GetValidNextStates(normalizedCurrentState);
+            List<string> validStates = GetValidNextStates(normalizedCurrentState);
             return validStates.Contains(normalizedNewState);
         }
 
@@ -80,7 +79,7 @@ namespace SGR.Helper
             if (string.IsNullOrWhiteSpace(currentState))
                 return [];
 
-            var normalizedCurrentState = currentState.Trim().ToUpperInvariant();
+            string normalizedCurrentState = currentState.Trim().ToUpperInvariant();
             return StateTransitions.TryGetValue(normalizedCurrentState, out var validStates)
                 ? [.. validStates]
                 : [];
@@ -96,8 +95,8 @@ namespace SGR.Helper
             if (string.IsNullOrWhiteSpace(state))
                 return 0;
 
-            var normalizedState = state.Trim().ToUpperInvariant();
-            var index = TypicalProgressOrder.IndexOf(normalizedState);
+            string normalizedState = state.Trim().ToUpperInvariant();
+            int index = TypicalProgressOrder.IndexOf(normalizedState);
 
             if (index == -1)
             {
@@ -119,7 +118,7 @@ namespace SGR.Helper
         /// <returns>Classe CSS completa para o badge.</returns>
         public static string GetStateBadgeClass(string state)
         {
-            return HistoryUi.GetStateBadgeClass(state);
+            return EquipmentUi.GetStateBadgeClass(state);
         }
 
         /// <summary>
@@ -132,8 +131,8 @@ namespace SGR.Helper
             if (string.IsNullOrWhiteSpace(state))
                 return -1;
 
-            var normalizedState = state.Trim().ToUpperInvariant();
-            var index = TypicalProgressOrder.IndexOf(normalizedState);
+            string normalizedState = state.Trim().ToUpperInvariant();
+            int index = TypicalProgressOrder.IndexOf(normalizedState);
 
             // Se for "AGUARDANDO PEÇA", retorna o índice de "EM REPARAÇÃO".
             if (index == -1 && normalizedState == "AGUARDANDO PEÇA")
@@ -150,8 +149,8 @@ namespace SGR.Helper
         /// <returns>True se a fase foi concluída.</returns>
         public static bool IsPhaseCompleted(string currentState, string phaseState)
         {
-            var currentIndex = GetPhaseIndex(currentState);
-            var phaseIndex = GetPhaseIndex(phaseState);
+            int currentIndex = GetPhaseIndex(currentState);
+            int phaseIndex = GetPhaseIndex(phaseState);
 
             return currentIndex > phaseIndex && currentIndex != -1 && phaseIndex != -1;
         }
@@ -167,8 +166,8 @@ namespace SGR.Helper
             if (string.IsNullOrWhiteSpace(currentState) || string.IsNullOrWhiteSpace(phaseState))
                 return false;
 
-            var normalizedCurrentState = currentState.Trim().ToUpperInvariant();
-            var normalizedPhaseState = phaseState.Trim().ToUpperInvariant();
+            string normalizedCurrentState = currentState.Trim().ToUpperInvariant();
+            string normalizedPhaseState = phaseState.Trim().ToUpperInvariant();
 
             // Caso especial: "AGUARDANDO PEÇA" é considerado ativo na fase "EM REPARAÇÃO".
             if (normalizedCurrentState == "AGUARDANDO PEÇA" && normalizedPhaseState == "EM REPARAÇÃO")
