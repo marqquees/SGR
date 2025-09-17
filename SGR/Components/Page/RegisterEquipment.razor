@@ -1,0 +1,73 @@
+﻿@page "/register-equipment"
+@rendermode InteractiveServer
+
+@using SGR.Components.Shared.Pages
+@using SGR.Model
+@using SGR.Service
+
+@inject EquipmentOperation Operation
+
+<PageTitle>Registar Equipamento</PageTitle>
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-11 col-xl-12">
+            <EditForm Model="@_equipment"
+                      OnValidSubmit="AddEquipment"
+                      FormName="registerEquipmentContextForm" class="needs-validation">
+                
+                <DataAnnotationsValidator/>
+
+                <Form @ref="_form"
+                      Equipment="_equipment"
+                      Loading="_loading"
+                      PrimaryButtonText="Salvando"
+                      SecondaryButtonText="Salvar">
+                </Form>
+            </EditForm>
+        </div>
+    </div>
+   
+    @if (!string.IsNullOrEmpty(_message))
+    {
+        <InfoModal Success="@_success" Message="@_message" />
+    }
+</div>
+
+@code {
+    private Equipment _equipment = new();
+    private string? _message;
+    private bool _success;
+    private bool _loading;
+    private Form? _form;
+
+    /// <summary>
+    /// Método responsável por adicionar um novo equipamento a Base de Dados.
+    /// </summary>
+    private async Task AddEquipment()
+    {
+        try
+        {
+            _loading = true;
+
+            await Operation.AddEquipmentAsync(_equipment);
+
+            _message = $"Equipamento {_equipment.SerialNumber} adicionado com sucesso!";
+            _success = true;
+            
+            _form?.ClearForm();
+        }
+        catch (Exception error)
+        {
+            _message = $"Erro ao adicionar o equipamento {_equipment.SerialNumber}. {error.Message}";
+            _success = false;
+        }
+        finally
+        {
+            _loading = false;
+            StateHasChanged();
+            await Task.Delay(5000);
+            _message = string.Empty;
+        }
+    }
+}

@@ -1,0 +1,103 @@
+﻿@page "/edit-equipment/{id:int}"
+@rendermode InteractiveServer
+
+@using SGR.Components.Shared.Pages
+@using SGR.Model
+@using SGR.Service
+
+@inject EquipmentOperation Operation
+@inject NavigationManager Navigation
+
+<PageTitle>Editar Equipamento</PageTitle>
+
+@if (_equipment == null)
+{
+    <div class="d-flex justify-content-center my-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Carregando...</span>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container-fluid py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-11 col-xl-12">
+                <EditForm Model="@_equipment"
+                          OnValidSubmit="UpdateEquipment"
+                          FormName="editEquipmentContextForm" class="needs-validation">
+                    <DataAnnotationsValidator />
+
+                    <Form Equipment="_equipment"
+                          Loading="_loading"
+                          PrimaryButtonText="Salvando"
+                          SecondaryButtonText="Salvar"
+                          ShowCancelButton="true">
+                    </Form>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}
+@if (!string.IsNullOrEmpty(_message))
+{
+    <InfoModal Success="@_success" Message="@_message" />
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private Equipment? _equipment;
+    private string? _message;
+    private bool _success;
+    private bool _loading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _equipment = await Operation.SearchByIdAsync(Id);
+            _success = true;
+        }
+        catch (Exception error)
+        {
+            _message = $"Erro ao carregar o equipamento {_equipment?.Id}: {error.Message}";
+            _success = false;
+        }
+        finally
+        {
+            _message = string.Empty;
+        }
+    }
+
+    private async Task UpdateEquipment()
+    {
+        if (_equipment == null)
+            return;
+        try
+        {
+            _loading = true;
+
+            await Operation.UpdateEquipmentAsync(_equipment);
+
+            _message = $"Equipamento {_equipment.Id} atualizado com sucesso!";
+            _success = true;
+
+            // Redireiciona para a lista de equipamentos após a atualização.
+            await Task.Delay(2000);
+            Navigation.NavigateTo("/");
+        }
+        catch (Exception error)
+        {
+            _message = $"Erro ao atualizar o equipamento {_equipment.Id}: {error.Message}";
+            _success = false;
+        }
+        finally
+        {
+            _loading = false;
+            StateHasChanged();
+            await Task.Delay(3000);
+            _message = string.Empty;
+        }
+    }
+}

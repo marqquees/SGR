@@ -1,9 +1,12 @@
-namespace SGR.Models
+namespace SGR.Model
 {
     /// <summary>
-    /// Classe estática que contém opções pré-definidas para os diferentes campos do inventário.
-    /// Usado para popular menus suspensos e validação de dados.
+    /// Fornece opções predefinidas para processos de registro, incluindo estados, clientes, categorias, marcas e
+    /// técnicos responsáveis.
     /// </summary>
+    /// <remarks>Esta classe contém coleções estáticas somente leitura que representam várias opções predefinidas
+    /// comumente usadas em fluxos de trabalho de registro e reparo de equipamentos. Essas opções incluem possíveis estados de
+    /// equipamentos, nomes de clientes, categorias de equipamentos, marcas e técnicos responsáveis.</remarks>
     public static class RegistrationOption
     {
         /// <summary>
@@ -19,7 +22,7 @@ namespace SGR.Models
         ];
 
         /// <summary>
-        /// Lista de clientes disponíveis no sistema.
+        /// Lista de clientes.
         /// </summary>
         public static readonly IReadOnlyList<string> Customer =
         [
@@ -34,7 +37,7 @@ namespace SGR.Models
         ];
 
         /// <summary>
-        /// Categorias de equipamentos suportadas pelo sistema.
+        /// Categorias de equipamentos.
         /// </summary>
         public static readonly IReadOnlyList<string> Category =
         [
@@ -52,7 +55,7 @@ namespace SGR.Models
         ];
 
         /// <summary>
-        /// Marcas de equipamentos suportadas pelo sistema.
+        /// Marcas de equipamentos.
         /// </summary>
         public static readonly IReadOnlyList<string> Brand =
         [
@@ -64,7 +67,7 @@ namespace SGR.Models
         ];
 
         /// <summary>
-        /// Técnicos responsáveis disponíveis.
+        /// Técnicos responsáveis.
         /// </summary>
         public static readonly IReadOnlyList<string> Responsible =
         [

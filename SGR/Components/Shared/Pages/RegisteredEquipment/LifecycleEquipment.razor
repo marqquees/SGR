@@ -1,5 +1,5 @@
-@using SGR.Helper
-@using SGR.Models
+Ôªø@using SGR.Helper
+@using SGR.Model
 
 <!-- Fluxo de Fases do Equipamento -->
 <div class="workflow-container workflow-compact">
@@ -10,20 +10,20 @@
         @for (int i = 0; i < phases.Count; i++)
         {
             var phase = phases[i];
-            var isActive = EquipmentLifecycle.IsPhaseActive(Item.State, phase.State);
-            var isCompleted = EquipmentLifecycle.IsPhaseCompleted(Item.State, phase.State);
+            var isActive = EquipmentLifecycle.IsPhaseActive(Equipment.State, phase.State);
+            var isCompleted = EquipmentLifecycle.IsPhaseCompleted(Equipment.State, phase.State);
             var cssClass = GetPhaseCssClass(phase.State, isActive, isCompleted);
             var isLastPhase = i == phases.Count - 1;
-            
+
             <div class="workflow-step @cssClass">
                 <div class="step-circle">
                     <span class="step-number">@(i + 1)</span>
                 </div>
                 <div class="step-content">
                     <div class="step-title">
-                        @if (Item.State == "AGUARDANDO PE«A" && phase.State == "EM REPARA«√O")
+                        @if (Equipment.State == "AGUARDANDO PE√áA" && phase.State == "EM REPARA√á√ÉO")
                         {
-                            @Item.State
+                            @Equipment.State
                         }
                         else
                         {
@@ -36,7 +36,7 @@
                     }
                     else if (isCompleted)
                     {
-                        <div class="step-subtitle">ConcluÌdo</div>
+                        <div class="step-subtitle">ConcluÔøΩdo</div>
                     }
                     else
                     {
@@ -50,67 +50,59 @@
             </div>
         }
     </div>
-    
+
     @if (IsEditing)
     {
-        <!-- Seletor de Estado em Modo de EdiÁ„o -->
+        <!-- Seletor de Estado em Modo de Edi√ß√£o -->
         <div class="workflow-editor workflow-editor-compact">
             <div class="row align-items-center g-1">
                 <div class="col-lg-4 col-md-7">
                     <label class="form-label fw-bold mb-1">
                         alterar estado
                     </label>
-                    <select class="form-select form-select-sm @(_isValidTransition ? "" : "is-invalid")" 
-                            value="@Item.State" 
+                    <select class="form-select form-select-sm @(_isValidTransition ? "" : "is-invalid")"
+                            value="@Equipment.State"
                             @onchange="ValidateStateTransition">
                         @foreach (var state in RegistrationOption.State)
                         {
-                            var isValid = EquipmentLifecycle.IsValidTransition(_currentState, state);
-                            <option value="@state" 
+                            bool isValid = EquipmentLifecycle.IsValidTransition(_currentState, state);
+                            <option value="@state"
                                     disabled="@(!isValid && state != _currentState)"
                                     class="@(isValid || state == _currentState ? "" : "text-muted")">
-                                @* @(isValid || state == _currentState ? "" : "(TransiÁ„o Inv·lida)") *@
                                 @state
                             </option>
                         }
                     </select>
-                    @* @if (_isValidTransition && Item.State != _currentState)
-                    {
-                        <small class="text-success d-block mt-1">
-                            TransiÁ„o V·lida
-                        </small>
-                    } *@
                 </div>
                 <div class="col-lg-8 col-md-5">
                     <label class="form-label fw-bold mb-1">
                         progresso
                     </label>
                     <div class="progress mb-1" style="height: 8px;">
-                        <div class="progress-bar @(_isValidTransition ? "bg-success" : "bg-danger")" 
-                             role="progressbar" 
-                             style="width: @(EquipmentLifecycle.GetProgressPercentage(Item.State))%"
-                             aria-valuenow="@EquipmentLifecycle.GetProgressPercentage(Item.State)"
+                        <div class="progress-bar @(_isValidTransition ? "bg-success" : "bg-danger")"
+                             role="progressbar"
+                             style="width: @(EquipmentLifecycle.GetProgressPercentage(Equipment.State))%"
+                             aria-valuenow="@EquipmentLifecycle.GetProgressPercentage(Equipment.State)"
                              aria-valuemin="0"
                              aria-valuemax="100">
                         </div>
                     </div>
                     <small class="text-muted">
-                        @* @(EquipmentLifecycle.GetProgressPercentage(Item.State))% *@
-                        <span class="badge @EquipmentLifecycle.GetStateBadgeClass(Item.State) ms-1">
-                            @Item.State
-                        </span> 
+                        <span class="badge @EquipmentLifecycle.GetStateBadgeClass(Equipment.State) ms-1">
+                            @Equipment.State
+                        </span>
                     </small>
                 </div>
             </div>
-            
-            @if (!_isValidTransition && Item.State != _currentState)
+
+            @if (!_isValidTransition && Equipment.State != _currentState)
             {
                 <div class="alert alert-warning mt-2 mb-0" role="alert">
                     <small>
-                        <strong>TransiÁ„o Inv·lida:</strong> 
-                        N„o È possÌvel transitar de "<strong>@_currentState</strong>" para "<strong>@Item.State</strong>".
+                        <strong>Transi√ß√£o Inv√°lida:</strong>
+                        N√£o √© poss√≠vel transitar de "<strong>@_currentState</strong>" para "<strong>@Equipment.State</strong>".
                         <br>
-                        <span class="text-muted">Estados v·lidos: @string.Join(", ", EquipmentLifecycle.GetValidNextStates(_currentState))</span>
+                        <span class="text-muted">Estados v√°lidos: @string.Join(", ", EquipmentLifecycle.GetValidNextStates(_currentState))</span>
                     </small>
                 </div>
             }
@@ -120,27 +112,27 @@
 
 @code {
     /// <summary>
-    /// Item do equipamento para o qual ser· exibido o ciclo de vida.
+    /// Item do equipamento para o qual ser√© exibido o ciclo de vida.
     /// </summary>
-    [Parameter] public Equipment Item { get; set; } = null!;
+    [Parameter] public Equipment Equipment { get; set; } = null!;
 
     /// <summary>
-    /// Indica se o componente est· em modo de ediÁ„o.
+    /// Indica se o componente est√© em modo de edi√ß√£o.
     /// </summary>
     [Parameter] public bool IsEditing { get; set; }
 
     /// <summary>
-    /// Callback executado quando uma mudanÁa de estado È detectada.
+    /// Callback executado quando uma mudan√ßa de estado √© detectada.
     /// </summary>
     [Parameter] public EventCallback<string> OnStateChanged { get; set; }
 
     /// <summary>
-    /// Estado original do equipamento para validaÁ„o de transiÁıes.
+    /// Estado original do equipamento para valida√ß√£o de transi√ß√µes.
     /// </summary>
-    private string _currentState = string.Empty;
+    private string? _currentState;
 
     /// <summary>
-    /// Indica se a transiÁ„o de estado atual È v·lida.
+    /// Indica se a transi√ß√£o de estado atual √© v√°lida.
     /// </summary>
     private bool _isValidTransition = true;
 
@@ -150,29 +142,29 @@
     private record WorkflowPhase(string State);
 
     /// <summary>
-    /// MÈtodo executado na inicializaÁ„o do componente.
+    /// M√©todo executado na inicializa√ß√£o do componente.
     /// </summary>
     protected override void OnInitialized()
     {
-        _currentState = Item.State;
+        _currentState = Equipment.State;
         _isValidTransition = true;
     }
 
     /// <summary>
-    /// MÈtodo executado quando os par‚metros do componente s„o atualizados.
+    /// M√©todo executado quando os par√¢metros do componente s√£o atualizados.
     /// </summary>
     protected override void OnParametersSet()
     {
-        // Atualiza o estado atual quando n„o est· em modo de ediÁ„o.
+        // Atualiza o estado atual quando n√£o est√° em modo de edi√ß√£o.
         if (!IsEditing)
         {
-            _currentState = Item.State;
+            _currentState = Equipment.State;
             _isValidTransition = true;
         }
     }
 
     /// <summary>
-    /// ObtÈm as fases do workflow em ordem sequencial.
+    /// Obt√©m as fases do workflow em ordem sequencial.
     /// </summary>
     /// <returns>Lista de fases do workflow.</returns>
     private List<WorkflowPhase> GetWorkflowPhases()
@@ -180,54 +172,56 @@
         return new List<WorkflowPhase>
         {
             new("AVARIADO"),
-            new("EM REPARA«√O"),
+            new("EM REPARA√á√ÉO"),
             new("REPARADO"),
             new("ENTREGUE AO CLIENTE")
         };
     }
 
     /// <summary>
-    /// Verifica se um conector deve ser marcado como concluÌdo.
+    /// Verifica se um conector deve ser marcado como conclu√≠do.
     /// </summary>
-    /// <param name="connectorIndex">Õndice do conector (posiÁ„o da fase atual).</param>
-    /// <returns>True se o conector deve ser concluÌdo.</returns>
+    /// <param name="connectorIndex">√≠ndice do conector (posi√ß√£o da fase atual).</param>
+    /// <returns>True se o conector deve ser conclu√≠do.</returns>
     private bool IsConnectorCompleted(int connectorIndex)
     {
-        var currentPhaseIndex = EquipmentLifecycle.GetPhaseIndex(Item.State);
-        
+        int currentPhaseIndex = EquipmentLifecycle.GetPhaseIndex(Equipment.State);
+
         return currentPhaseIndex > connectorIndex && currentPhaseIndex != -1;
     }
 
     /// <summary>
-    /// ObtÈm a classe CSS apropriada para uma fase.
+    /// Obt√©m a classe CSS apropriada para uma fase.
     /// </summary>
     /// <param name="phaseState">Estado da fase.</param>
-    /// <param name="isActive">Se a fase est· ativa.</param>
-    /// <param name="isCompleted">Se a fase foi concluÌda.</param>
+    /// <param name="isActive">Se a fase est√° ativa.</param>
+    /// <param name="isCompleted">Se a fase foi conclu√≠da.</param>
     /// <returns>Classe CSS para a fase.</returns>
     private string GetPhaseCssClass(string phaseState, bool isActive, bool isCompleted)
     {
-        // Se o estado atual È "AGUARDANDO PE«A" e estamos na fase "EM REPARA«√O", mostra como ativo especial
-        if (Item.State.Trim().ToUpperInvariant() == "AGUARDANDO PE«A" && 
-            phaseState.Trim().ToUpperInvariant() == "EM REPARA«√O")
+        // Mostra como ativo especial, se o estado atual √© "AGUARDANDO PE√áA" e estamos na fase "EM REPARA√á√ÉO".
+        if (Equipment.State.Trim().ToUpperInvariant() == "AGUARDANDO PE√áA" &&
+            phaseState.Trim().ToUpperInvariant() == "EM REPARA√á√ÉO")
             return "active waiting";
-        
-        if (isActive) return "active";
+
+        if (isActive) 
+            return "active";
+
         return !isCompleted ? "pending" : "completed";
     }
 
     /// <summary>
-    /// Valida a transiÁ„o de estado quando o valor È alterado.
+    /// Valida a transi√ß√£o de estado quando o valor √© alterado.
     /// </summary>
-    /// <param name="e">Evento de mudanÁa contendo o novo estado.</param>
+    /// <param name="e">Evento de mudan√ßa contendo o novo estado.</param>
     private async Task ValidateStateTransition(ChangeEventArgs e)
     {
         if (e.Value is string newState)
         {
-            Item.State = newState;
+            Equipment.State = newState;
             _isValidTransition = EquipmentLifecycle.IsValidTransition(_currentState, newState);
-            
-            // Notifica componente pai sobre a mudanÁa de estado.
+
+            // Notifica componente pai sobre a mudan√ßa de estado.
             if (OnStateChanged.HasDelegate)
                 await OnStateChanged.InvokeAsync(newState);
 
@@ -236,19 +230,19 @@
     }
 
     /// <summary>
-    /// Reinicia o estado original para cancelar alteraÁıes.
+    /// Reinicia o estado original para cancelar altera√ß√µes.
     /// </summary>
     public void ResetToOriginalState()
     {
-        Item.State = _currentState;
+        Equipment.State = _currentState;
         _isValidTransition = true;
         StateHasChanged();
     }
 
     /// <summary>
-    /// ObtÈm se o estado atual È v·lido para salvar.
+    /// Obt√©m se o estado atual √© valido para salvar.
     /// </summary>
-    /// <returns>True se a transiÁ„o for v·lida, False caso contr·rio.</returns>
+    /// <returns>True se a transi√ß√£o for v√°lida, false caso contr√°rio.</returns>
     public bool IsCurrentStateValid()
     {
         return _isValidTransition;

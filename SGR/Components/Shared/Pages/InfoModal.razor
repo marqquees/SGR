@@ -1,0 +1,13 @@
+<div class="toast-container position-fixed bottom-0 start p-2">
+    <div class="toast show @(Success ? "bg-success" : "bg-danger") text-white" role="alert">
+        <div class="toast-body">
+            <i class="bi @(Success ? "bi-check-circle" : "bi-exclamation-triangle")"></i>
+            @Message
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public bool Success { get; set; }
+    [Parameter] public string? Message { get; set; }
+}
