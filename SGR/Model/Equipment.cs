@@ -19,7 +19,7 @@ namespace SGR.Model
         public string? Customer { get; set; }
         public string? User { get; set; }
         public string? Category { get; set; }
-        public string? Brand { get; set; }
+        public string? Manufacturer { get; set; }
         public string? Model { get; set; }
         public string? SerialNumber { get; set; }
         public string? Processor { get; set; }
@@ -27,6 +27,7 @@ namespace SGR.Model
         public string? Storage { get; set; }
         public string? OperatingSystem { get; set; }
         public string? Note { get; set; }
+        public string? Damage { get; set; }
         public string? Responsible { get; set; }
     }
 }

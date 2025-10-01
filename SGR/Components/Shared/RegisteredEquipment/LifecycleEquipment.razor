@@ -63,7 +63,7 @@
                     <select class="form-select form-select-sm @(_isValidTransition ? "" : "is-invalid")"
                             value="@Equipment.State"
                             @onchange="ValidateStateTransition">
-                        @foreach (var state in RegistrationOption.State)
+                        @foreach (var state in OptionForm.State)
                         {
                             bool isValid = EquipmentLifecycle.IsValidTransition(_currentState, state);
                             <option value="@state"

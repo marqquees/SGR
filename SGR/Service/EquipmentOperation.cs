@@ -151,7 +151,7 @@ namespace SGR.Service
         }
 
         /// <summary>
-        /// Filtra os equipamentos baseado no termo de pesquisa.
+        /// Filtra a lista de equipamentos com base no termo da pesquisa.
         /// </summary>
         public List<Equipment> FilterEquipmentList(string searchTerm, List<Equipment> equipmentList)
         {
@@ -166,13 +166,14 @@ namespace SGR.Service
                 i.Customer?.Contains(searchTerm) == true ||
                 i.User?.Contains(searchTerm) == true ||
                 i.Category?.Contains(searchTerm) == true ||
-                i.Brand?.Contains(searchTerm) == true ||
+                i.Manufacturer?.Contains(searchTerm) == true ||
                 i.Model?.Contains(searchTerm) == true ||
                 i.SerialNumber?.Contains(searchTerm) == true ||
                 i.Processor?.Contains(searchTerm) == true ||
                 i.MemoryRAM?.Contains(searchTerm) == true ||
                 i.Storage?.Contains(searchTerm) == true ||
                 i.OperatingSystem?.Contains(searchTerm) == true ||
+                i.Damage?.Contains(searchTerm) == true ||
                 i.Note?.Contains(searchTerm) == true ||
                 i.Responsible?.Contains(searchTerm) == true
             )];

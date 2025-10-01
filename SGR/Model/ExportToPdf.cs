@@ -161,8 +161,8 @@ namespace SGR.Model
                     table.Cell().Text(equipment?.User);
                     table.Cell().Text("Categoria").Bold();
                     table.Cell().Text(equipment?.Category);
-                    table.Cell().Text("Marca").Bold();
-                    table.Cell().Text(equipment?.Brand);
+                    table.Cell().Text("Fabricante").Bold();
+                    table.Cell().Text(equipment?.Manufacturer);
                     table.Cell().Text("Modelo").Bold();
                     table.Cell().Text(equipment?.Model);
                     table.Cell().Text("Número de Série").Bold();
@@ -212,6 +212,8 @@ namespace SGR.Model
                 });
 
                 column.Item().Height(10);
+                column.Item().Text("Avaria").Bold();
+                column.Item().Text(equipment?.Damage);
                 column.Item().Text("Observação").Bold();
                 column.Item().Text(equipment?.Note);
             });
