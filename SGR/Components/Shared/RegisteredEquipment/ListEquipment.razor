@@ -1,3 +1,4 @@
+@using Microsoft.AspNetCore.Components.QuickGrid
 @using SGR.Helper
 @using SGR.Model
 @using SGR.Service
@@ -14,59 +15,45 @@
                     </h6>
 
                     <div>
-                        <input type="text" class="form-control" placeholder="pesquisar..."
-                               @bind-value="_searchTerm" @bind-value:event="oninput" @onkeyup="FilterEquipment" />
+                        <input type="text" 
+                            class="form-control" 
+                            placeholder="pesquisar..."
+                            @bind-value="_searchTerm" 
+                            @bind-value:event="oninput" 
+                            @onkeyup="FilterEquipment" />
                     </div>
                 </div>
 
                 <div class="card-body">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Cliente</th>
-                                <th>Categoria</th>
-                                <th>Fabricante</th>
-                                <th>Processador</th>
-                                <th>Memória RAM</th>
-                                <th>Número de Série</th>
-                                <th>Estado</th>
-                                <th>Responsável</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var equipment in _filteredEquipment)
-                            {
-                                <tr class="align-middle">
-                                    <td>@equipment.Customer</td>
-                                    <td>@equipment.Category</td>
-                                    <td>@equipment.Manufacturer</td>
-                                    <td>@equipment.Processor</td>
-                                    <td>@equipment.MemoryRAM</td>
-                                    <td>@equipment.SerialNumber</td>
-                                    <td>
-                                        <span class="badge @EquipmentUi.GetStateBadgeClass(equipment.State!)">
-                                            @equipment.State
-                                        </span>
-                                    </td>
-                                    <td>@equipment.Responsible</td>
-                                    <td>
-                                        <a href="/editar-equipamento/@equipment.Id" class="btn btn-info btn-sm me-2">
-                                            Editar
-                                        </a>
+                    <QuickGrid Items="_filteredEquipment.AsQueryable()" Class="table table-hover">
+                        <PropertyColumn Property="@(e => e.Customer)" Title="Cliente" />
+                        <PropertyColumn Property="@(e => e.Category)" Title="Categoria"/>
+                        <PropertyColumn Property="@(e => e.Manufacturer)" Title="Fabricante" />
+                        <PropertyColumn Property="@(e => e.Processor)" Title="Processador" />
+                        <PropertyColumn Property="@(e => e.MemoryRAM)" Title="Memória RAM" />
+                        <PropertyColumn Property="@(e => e.SerialNumber)" Title="Número de Série" />
 
-                                        <button type="button" class="btn btn-danger btn-sm me-2" @onclick="() => Delete.InvokeAsync(equipment)">
-                                            Remover
-                                        </button>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                        <TemplateColumn Title="Estado">
+                            <span class="badge @EquipmentUi.GetStateBadgeClass(context.State!)">
+                                @context.State
+                            </span>
+                        </TemplateColumn>
+
+                        <PropertyColumn Property="@(e => e.Responsible)" Title="Responsável" />
+
+                        <TemplateColumn Title="Ações">
+                            <a href="/editar-equipamento/@context.Id" class="btn btn-info btn-sm me-2">
+                                Editar
+                            </a>
+                            <button type="button" class="btn btn-danger btn-sm me-2" @onclick="() => Delete.InvokeAsync(context)">
+                                Remover
+                            </button>
+                        </TemplateColumn>
+                    </QuickGrid>
                 </div>
 
                 <div class="card-footer">
-                    <small class="text-muted">@_filteredEquipment.Count de @_equipment.Count registos.</small>
+                    <small class="text-muted">@_filteredEquipment.Count de @_equipmentList.Count registos.</small>
                 </div>
             </div>
         </div>
@@ -77,16 +64,16 @@
     [Parameter] public List<Equipment> Equipment { get; set; } = [];
     [Parameter] public EventCallback<Equipment> Delete { get; set; }
 
-    private List<Equipment> _equipment = [];
+    private List<Equipment> _equipmentList = [];
     private List<Equipment> _filteredEquipment = [];
     private string _searchTerm = string.Empty;
 
     /// <summary>
-    /// Método executado quando os parametros do componente são atualizados.
+    /// Método executado quando os parâmetros do componente são atualizados.
     /// </summary>
     protected override void OnParametersSet()
     {
-        _equipment = Equipment;
+        _equipmentList = Equipment;
         FilterEquipment();
     }
 
@@ -95,6 +82,6 @@
     /// </summary>
     private void FilterEquipment()
     {
-        _filteredEquipment = Operation.FilterEquipmentList(_searchTerm, _equipment);
+        _filteredEquipment = Operation.FilterEquipment(_searchTerm, _equipmentList);
     }
 }

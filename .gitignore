@@ -373,3 +373,5 @@ FodyWeavers.xsd
 
 # ASP.NET Core appsettings files
 /SGR/appsettings.json
+/SGR/Migrations/20250830105427_Equipment1.cs
+/SGR/Migrations/EquipmentContextModelSnapshot.cs

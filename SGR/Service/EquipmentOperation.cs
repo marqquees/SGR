@@ -151,31 +151,28 @@ namespace SGR.Service
         }
 
         /// <summary>
-        /// Filtra a lista de equipamentos com base no termo da pesquisa.
+        /// Filtra a lista de equipamentos com base no termo de pesquisa.
         /// </summary>
-        public List<Equipment> FilterEquipmentList(string searchTerm, List<Equipment> equipmentList)
+        /// <remarks>
+        /// A função verifica se o termo de pesquisa é nulo, vazio ou composto apenas por espaços em branco.
+        /// </remarks>
+        /// <param name="searchTerm">
+        /// O termo a ser pesquisado dentro do cliente, categoria ou número de série do equipamento. Se for nulo, vazio ou
+        /// composto apenas por espaços em branco, a lista original <paramref name="equipmentList"/> é retornada sem filtro.
+        /// <param name="equipmentList"> A lista de equipamentos a ser filtrada. 
+        /// Cada item de equipamento é verificado em relação ao termo de pesquisa. </param>
+        /// <returns>
+        /// A lista filtrada de equipamentos onde o cliente, categoria ou número de série contém o termo de pesquisa especificado.
+        /// Se o termo de pesquisa for nulo, vazio ou composto por espaços em branco, o método retorna a lista original.
+        public List<Equipment> FilterEquipment(string searchTerm, List<Equipment> equipmentList)
         {
             if (string.IsNullOrWhiteSpace(searchTerm))
                 return equipmentList;
 
-            searchTerm = searchTerm.ToLower();
-            return [.. equipmentList.Where(i =>
-                i.Id.ToString().Contains(searchTerm) ||
-                i.DateRegister.ToString("dd/MM/yyyy").Contains(searchTerm) ||
-                i.State?.Contains(searchTerm) == true ||
-                i.Customer?.Contains(searchTerm) == true ||
-                i.User?.Contains(searchTerm) == true ||
-                i.Category?.Contains(searchTerm) == true ||
-                i.Manufacturer?.Contains(searchTerm) == true ||
-                i.Model?.Contains(searchTerm) == true ||
-                i.SerialNumber?.Contains(searchTerm) == true ||
-                i.Processor?.Contains(searchTerm) == true ||
-                i.MemoryRAM?.Contains(searchTerm) == true ||
-                i.Storage?.Contains(searchTerm) == true ||
-                i.OperatingSystem?.Contains(searchTerm) == true ||
-                i.Damage?.Contains(searchTerm) == true ||
-                i.Note?.Contains(searchTerm) == true ||
-                i.Responsible?.Contains(searchTerm) == true
+            return [.. equipmentList.Where(equipment =>
+                equipment.Customer?.Contains(searchTerm) == true ||
+                equipment.Category?.Contains(searchTerm) == true ||
+                equipment.SerialNumber?.Contains(searchTerm) == true
             )];
         }
 
