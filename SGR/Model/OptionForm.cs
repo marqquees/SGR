@@ -7,7 +7,7 @@ namespace SGR.Model
     /// <remarks>Esta classe contém coleções estáticas somente leitura que representam várias opções predefinidas
     /// comumente usadas em fluxos de trabalho de registro e reparo de equipamentos. Essas opções incluem possíveis estados de
     /// equipamentos, nomes de clientes, categorias de equipamentos, marcas e técnicos responsáveis.</remarks>
-    public static class RegistrationOption
+    public static class OptionForm
     {
         /// <summary>
         /// Estados possíveis de um equipamento no processo de reparação.
@@ -18,7 +18,8 @@ namespace SGR.Model
             "EM REPARAÇÃO",
             "AGUARDANDO PEÇA",
             "REPARADO",
-            "ENTREGUE AO CLIENTE"
+            "ENTREGUE AO CLIENTE",
+            "OBSOLETO"
         ];
 
         /// <summary>
@@ -26,6 +27,7 @@ namespace SGR.Model
         /// </summary>
         public static readonly IReadOnlyList<string> Customer =
         [
+            "Indefinido",
             "RuIIuR",
             "AFG",
             "ContruMadeira",
@@ -41,7 +43,9 @@ namespace SGR.Model
         /// </summary>
         public static readonly IReadOnlyList<string> Category =
         [
+            "AIO",
             "Torre",
+            "Mini Torre",
             "Portátil",
             "Monitor",
             "Impressora",

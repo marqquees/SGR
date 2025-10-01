@@ -1,8 +1,8 @@
 @page "/"
 @rendermode InteractiveServer
 
-@using SGR.Components.Shared.Pages
-@using SGR.Components.Shared.Pages.RegisteredEquipment
+@using SGR.Components.Shared
+@using SGR.Components.Shared.RegisteredEquipment
 @using SGR.Model
 @using SGR.Service
 
@@ -19,7 +19,8 @@
 }
 else
 {
-    <ListEquipment Equipment="@_equipment" 
+    <ListEquipment 
+        Equipment="@_equipment" 
         Delete="@((equipment) => Modal.ConfirmRemove(equipment))" />
 }
 

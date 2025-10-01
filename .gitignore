@@ -361,3 +361,15 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Property folder
+/SGR/Properties/
+
+# temp-pdf folder
+/SGR/wwwroot/temp-pdf/
+
+# Migrations folder
+/SGR/Migrations/
+
+# ASP.NET Core appsettings files
+/SGR/appsettings.json

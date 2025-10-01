@@ -33,7 +33,7 @@ namespace SGR.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Brand")
+                    b.Property<string>("Manufacturer")
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
@@ -59,7 +59,7 @@ namespace SGR.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<string>("Note")
+                    b.Property<string>("Damage")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
