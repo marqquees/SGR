@@ -14,7 +14,7 @@ public static class OptionForm
         "EM REPARAÇÃO",
         "AGUARDANDO PEÇA",
         "REPARADO",
-        "ENTREGUE AO CLIENTE",
+        "ENTREGUE AO CLIENTE"
     ];
 
     /// <summary>

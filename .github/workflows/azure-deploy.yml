@@ -11,10 +11,10 @@ jobs:
 
     steps:
       - name: Checkout do Código
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Configurar .NET 10
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '10.0.x'
 
@@ -28,7 +28,7 @@ jobs:
         run: dotnet publish SGR/SGR.csproj --configuration Release --output ./publish --no-build
 
       - name: Implementar para Azure App Service
-        uses: azure/webapps-deploy@v3
+        uses: azure/webapps-deploy@v2.2.19
         with:
           app-name: sgr-web
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}

@@ -1,28 +1,50 @@
-﻿<div class="modal fade show" style="display: block;">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-danger text-white">
-                <h6 class="modal-title">Confirmar Remoção</h6>
-                <button type="button" class="btn-close btn-close-white" @onclick="Cancel"></button>
-            </div>
-
-            <div class="modal-body">
-                <div class="alert alert-warning">
-                    Esta ação não pode ser desfeita!
+﻿@if (IsVisible)
+{
+    <div class="modal show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Confirmar Remoção</h5>
+                    <button type="button" class="btn-close btn-close-white" @onclick="Hide"></button>
                 </div>
-                <p>Tem certeza que deseja remover este equipamento?</p>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancelar</button>
-                <button type="button" class="btn btn-danger" @onclick="Remove">Remover</button>
+                
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        Esta ação é irreversível.
+                    </div>
+                    Tem certeza que deseja remover este livro?
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" @onclick="ConfirmDeletion">Remover</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+}
 
 @code {
-    [Parameter] public int? Id { get; set; }
-    [Parameter] public EventCallback Remove { get; set; }
-    [Parameter] public EventCallback Cancel { get; set; }
+    [Parameter] public EventCallback RemoveEquipment { get; set; }
+    private bool IsVisible { get; set; }
+
+    // Método para exibir o modal.
+    public void Show() 
+    {
+        IsVisible = true;
+        StateHasChanged();
+    }
+
+    // Método para ocultar o modal.
+    private void Hide() 
+    {
+        IsVisible = false;
+        StateHasChanged();
+    }
+
+    // Método chamado quando o usuário confirma a remoção.
+    private async Task ConfirmDeletion()
+    {
+        Hide();
+        if (RemoveEquipment.HasDelegate) await RemoveEquipment.InvokeAsync();
+    }
 }

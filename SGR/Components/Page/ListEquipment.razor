@@ -2,7 +2,6 @@
 @rendermode InteractiveServer
 
 @using SGR.Components.Page.Shared
-@using SGR.Helper
 @using SGR.Models
 @using SGR.Services
 @using Microsoft.AspNetCore.Components.QuickGrid
@@ -29,8 +28,7 @@
         @if (!_equipment.Any())
         {
             <div class="d-flex justify-content-center align-items-center p-4">
-                <div class="alert alert-info d-flex gap-2 mb-0" role="alert">
-                    <i class="bi bi-info-circle-fill"></i>
+                <div class="alert alert-info d-flex gap-2 mb-0">
                     <span>Nenhum equipamento registado.</span>
                 </div>
             </div>
@@ -43,20 +41,13 @@
                         Items="@_filterEquipment.AsQueryable()" 
                         Pagination="@_state"
                         Class="table table-borderless align-middle">
-                        <PropertyColumn Property="@(e => e.Customer)" Title="Cliente" />
-                        <PropertyColumn Property="@(e => e.Category)" Title="Categoria" />
-                        <PropertyColumn Property="@(e => e.Manufacturer)" Title="Fabricante" />
-                        <PropertyColumn Property="@(e => e.Processor)" Title="Processador" />
-                        <PropertyColumn Property="@(e => e.MemoryRAM)" Title="Memória RAM" />
-                        <PropertyColumn Property="@(e => e.SerialNumber)" Title="Número de Série" />
-                        <TemplateColumn Title="Estado">
-                            <span class="badge @EquipmentUi.GetStateBadgeClass(context.State!)">
-                                @context.State
-                            </span>
-                        </TemplateColumn>
-                        <PropertyColumn Property="@(e => e.Responsible)" Title="Responsável" />
-                        <TemplateColumn Title="Ações">
-                            <a class="btn btn-info btn-sm" href=@($"/detalhe-equipamento/{context.Id}")>Detalhes</a>
+                        <PropertyColumn Property="@(e => e.Customer)" Title="Cliente" Align="Align.Center"/>
+                        <PropertyColumn Property="@(e => e.Category)" Title="Categoria" Align="Align.Center"/>
+                        <PropertyColumn Property="@(e => e.Manufacturer)" Title="Fabricante" Align="Align.Center"/>
+                        <PropertyColumn Property="@(e => e.State)" Title="Estado" Align="Align.Center"/>
+                        <PropertyColumn Property="@(e => e.Responsible)" Title="Responsável" Align="Align.Center"/>
+                        <TemplateColumn Title="Ações" Align="Align.Center">
+                            <a class="btn btn-info btn-sm" href=@($"/detalhe_equipamento/{context.Id}")>Detalhes</a>
                         </TemplateColumn>
                     </QuickGrid>
                 </div>

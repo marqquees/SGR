@@ -21,7 +21,7 @@ public class EquipmentOperation(EquipmentContext context, ILogger<EquipmentOpera
         }
         catch (Exception error)
         {
-            logger.LogError(error.Message, "Erro ao carregar a lista dos equipamentos. ");
+            logger.LogError(error, "Erro ao carregar a lista dos equipamentos. ");
             throw;
         }
     }
@@ -32,13 +32,10 @@ public class EquipmentOperation(EquipmentContext context, ILogger<EquipmentOpera
     /// <param name="equipment">
     /// O equipamento a ser adicionado.
     /// </param>
-    /// <returns>
-    /// O equipamento adicionado ou lança uma exceção se o número de série já existir ou se ocorrer algum erro durante a adição do equipamento.
-    /// </returns>
     /// <exception cref="InvalidOperationException">
     /// Lançada quando o número de série do equipamento já existe.
     /// </exception>
-    public async Task<Equipment> AddEquipmentAsync(Equipment equipment)
+    public async Task AddEquipmentAsync(Equipment equipment)
     {
         try
         {
@@ -49,13 +46,12 @@ public class EquipmentOperation(EquipmentContext context, ILogger<EquipmentOpera
                     throw new InvalidOperationException($"O número de série {equipment.SerialNumber} já existe.");
             }
             
-            EntityEntry<Equipment> e = await context.Equipment.AddAsync(equipment);
+            await context.Equipment.AddAsync(equipment);
             await context.SaveChangesAsync();
-            return e.Entity;
         }
         catch (Exception error)
         {
-            logger.LogError(error.Message, "Erro ao adicionar o equipamento.");
+            logger.LogError(error, "Erro ao adicionar o equipamento.");
             throw;
         }
     }
@@ -67,10 +63,7 @@ public class EquipmentOperation(EquipmentContext context, ILogger<EquipmentOpera
     /// O equipamento com os dados atualizados.
     /// O equipamento deve conter um ID válido para que a atualização seja realizada corretamente.
     /// </param>
-    /// <returns>
-    /// O equipamento atualizado ou lança uma exceção se ocorrer algum erro durante a atualização do equipamento.
-    /// </returns>
-    public async Task<Equipment> UpdateDataEquipmentAsync(Equipment equipment)
+    public async Task UpdateDataEquipmentAsync(Equipment equipment)
     {
         try
         {
@@ -83,11 +76,10 @@ public class EquipmentOperation(EquipmentContext context, ILogger<EquipmentOpera
             else context.Equipment.Update(equipment);
 
             await context.SaveChangesAsync();
-            return equipment;
         }
         catch (Exception error)
         {
-            logger.LogError(error.Message, "Erro ao atualizar o equipamento com S/N {SerialNumber}.", equipment.SerialNumber);
+            logger.LogError(error, "Erro ao atualizar os dados do equipamento com S/N {SerialNumber}.", equipment.SerialNumber);
             throw;
         }
     }
@@ -109,7 +101,7 @@ public class EquipmentOperation(EquipmentContext context, ILogger<EquipmentOpera
         }
         catch (Exception error)
         {
-            logger.LogError(error.Message, "Erro ao buscar o equipamento com ID {IdEquipment}.", idEquipment);
+            logger.LogError(error, "Erro ao buscar os dados do equipamento com ID {IdEquipment}.", idEquipment);
             throw;
         }
     }
@@ -139,7 +131,7 @@ public class EquipmentOperation(EquipmentContext context, ILogger<EquipmentOpera
         }
         catch (Exception error)
         {
-            logger.LogError(error.Message, "Erro ao remover o equipamento com ID {IdEquipment}.", idEquipment);
+            logger.LogError(error, "Erro ao remover os dados do equipamento com ID {IdEquipment}.", idEquipment);
             throw;
         }
     }

@@ -16,49 +16,49 @@ public class Equipment
     
     [Required(ErrorMessage = "Este campo é obrigatório.")]
     [StringLength(20)]
-    public string? State { get; set; }
+    public string State { get; set; } = null!;
     
     [Required(ErrorMessage = "Este campo é obrigatório.")]
     [StringLength(20)]
-    public string? Customer { get; set; }
+    public string Customer { get; set; } = null!;
     
     [StringLength(100)]
-    public string? User { get; set; }
+    public string User { get; set; } = null!;
     
     [Required(ErrorMessage = "Este campo é obrigatório.")]
     [StringLength(15)]
-    public string? Category { get; set; }
+    public string Category { get; set; } = null!;
     
     [Required(ErrorMessage = "Este campo é obrigatório.")]
     [StringLength(10)]
-    public string? Manufacturer { get; set; }
+    public string Manufacturer { get; set; } = null!;
     
     [StringLength(50)]
-    public string? Model { get; set; }
+    public string Model { get; set; } = null!;
     
     [StringLength(50)]
-    public string? SerialNumber { get; set; }
+    public string SerialNumber { get; set; } = null!;
     
     [StringLength(50)]
-    public string? Processor { get; set; }
+    public string Processor { get; set; } = null!;
     
     [StringLength(10)]
-    public string? MemoryRAM { get; set; }
+    public string MemoryRAM { get; set; } = null!;
     
     [StringLength(10)]
-    public string? Storage { get; set; }
+    public string Storage { get; set; } = null!;
     
     [StringLength(30)]
-    public string? OperatingSystem { get; set; }
-    
+    public string OperatingSystem { get; set; } = null!;
+
     [StringLength(300, ErrorMessage = "Este campo deve conter no máximo 300 caracteres.")]
-    public string? Note { get; set; }
+    public string Note { get; set; } = null!;
     
     [Required(ErrorMessage = "Este campo é obrigatório.")]
     [MaxLength(500, ErrorMessage = "Este campo deve conter no máximo 500 caracteres.")]
-    public string? Damage { get; set; }
+    public string Damage { get; set; } = null!;
     
     [Required(ErrorMessage = "Este campo é obrigatório.")]
     [StringLength(20)]
-    public string? Responsible { get; set; }
+    public string Responsible { get; set; } = null!;
 }

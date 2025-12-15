@@ -14,8 +14,7 @@
 
     <Form Equipment="@_equipment"
           Loading="@_loading"
-          PrimaryButtonText="Salvar"
-          SecondaryButtonText="Salvando...">
+          ButtonText="Salvar">
     </Form>
 </EditForm>
 
@@ -51,7 +50,7 @@
         finally
         {
             _loading = false;
-            await Task.Delay(2000);
+            await Task.Delay(1000); 
         }
     }
 

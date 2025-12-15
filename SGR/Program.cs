@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SGR.Components;
 using SGR.Data;
-using SGR.Models;
 using SGR.Services;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -21,7 +20,6 @@ builder.Services.AddHostedService<TempFileCleanup>();
 
 // Serviços de Exportação.
 builder.Services.AddScoped<ExportToPdf>();
-builder.Services.AddScoped<ExportToExcel>();
 
 WebApplication app = builder.Build();
 

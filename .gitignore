@@ -1,6 +1,19 @@
-# SQLite files
-*.db 
-*.sqlite3
+# Ficheiros SQLite 
+*.db
+*.sqlite
+*.db-shm
+*.db-wal
 
-# JetBrains Rider files
+# JetBrains Rider
 .idea/
+*.user
+
+# Pastas de Compilação
+[Bb]in/
+[Oo]bj/
+
+# Diretorio Temporário
+/wwwroot/temp_pdf/
+
+# Ficheiro Temporário
+*.pdf

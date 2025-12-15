@@ -11,14 +11,14 @@ using SGR.Data;
 namespace SGR.Migrations
 {
     [DbContext(typeof(EquipmentContext))]
-    [Migration("20260420140745_SGR.0.1.1")]
-    partial class SGR011
+    [Migration("20260422153718_BCP.0.1.1")]
+    partial class BCP011
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "10.0.6");
+            modelBuilder.HasAnnotation("ProductVersion", "10.0.7");
 
             modelBuilder.Entity("SGR.Models.Equipment", b =>
                 {
@@ -50,22 +50,27 @@ namespace SGR.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("MemoryRAM")
+                        .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Model")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Note")
+                        .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("OperatingSystem")
+                        .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Processor")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
@@ -75,6 +80,7 @@ namespace SGR.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("SerialNumber")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
@@ -84,10 +90,12 @@ namespace SGR.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Storage")
+                        .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("User")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 

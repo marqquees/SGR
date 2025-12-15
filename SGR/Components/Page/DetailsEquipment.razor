@@ -1,193 +1,266 @@
-@page "/detalhe-equipamento/{Id:int}"
+@page "/detalhe_equipamento/{Id:int}"
 @rendermode InteractiveServer
 
 @using SGR.Components.Page.Shared
-@using SGR.Helper
 @using SGR.Models
 @using SGR.Services
 
 @inject EquipmentOperation Operation
 @inject ExportToPdf ExportPdf
-@inject ExportToExcel ExportExcel
+@inject NavigationManager Navigation
 
-@if (_equipment != null)
-{
-    <!-- Secção: Controlo -->
-    <div class="card mb-3">
-        <div class="card-header bg-light">
-            <h5 class="mb-0 fw-bold">Controlo</h5>
-        </div>
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-11 col-xl-12">
+            @if (_equipment is null)
+            {
+                <div class="d-flex justify-content-center align-items-center p-4">
+                    <div class="alert alert-warning d-flex gap-2 mb-0" role="alert">
+                        <span>Equipamento não encontrado.</span>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <!-- Secção: Controlo -->
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Controlo</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <!-- Data de Registo -->
+                            <div class="col-md-4">
+                                <label class="form-label fw-bolder">Data de Registo</label>
+                                <p class="form-control-plaintext">@_equipment.DateRegister.ToString("dd/MM/yyyy")</p>
+                            </div>
 
-        <div class="card-body">
-            <div class="row">
-                
-                <!-- Data de Registo -->
-                <div class="col-md-4">
-                    <strong>Data de Registo</strong>
-                    <p>@_equipment.DateRegister.ToString("dd/MM/yyyy")</p>
+                            <!-- Estado -->
+                            <div class="col-md-4">
+                                <label class="form-label fw-bolder">Estado do Equipamento</label>                           
+                                <p class="form-control-plaintext">@_equipment.State</p>
+                            </div>
+
+                            <!-- Responsável -->
+                            <div class="col-md-4">
+                                <label class="form-label fw-bolder">Responsável</label>
+                                <p class="form-control-plaintext">@_equipment.Responsible</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Estado -->
-                <div class="col-md-4">
-                    <strong>Estado</strong>
-                    <p>
-                        <span class="badge @EquipmentUi.GetStateBadgeClass(_equipment.State!)">
-                            @_equipment.State
-                        </span>
-                    </p>
-                </div>
+                <!-- Secção: Cliente e Utilizador -->
+                <div class="card mb-4">
+                    <div class="card-header bg-info text-black">
+                        <h5 class="mb-0">Cliente e Utilizador</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-2">
+                            <!-- Cliente -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bolder">Cliente</label>
+                                <p class="form-control-plaintext">@_equipment.Customer</p>
+                            </div>
 
-                <!-- Responsável -->
-                <div class="col-md-4">
-                    <strong>Responsável</strong>
-                    <p>@_equipment.Responsible</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Secção: Especificações Técnicas -->
-    <div class="card mb-3">
-        <div class="card-header bg-light">
-            <h5 class="mb-0 fw-bold">Especificações Técnicas</h5>
-        </div>
-
-        <div class="card-body">
-            <div class="row">
-                
-                <!-- Cliente -->
-                <div class="col-md-3">
-                    <strong>Cliente</strong>
-                    <p>@_equipment.Customer</p>
-                </div>
-
-                <!-- Utilizador -->
-                <div class="col-md-3">
-                    <strong>Utilizador</strong>
-                    <p>@_equipment.User</p>
-                </div>
-
-                <!-- Categoria -->
-                <div class="col-md-3">
-                    <strong>Categoria</strong>
-                    <p>@_equipment.Category</p>
-                </div>
-
-                <!-- Fabricante -->
-                <div class="col-md-3">
-                    <strong>Fabricante</strong>
-                    <p>@_equipment.Manufacturer</p>
-                </div>
-
-                <!-- Modelo -->
-                <div class="col-md-3">
-                    <strong>Modelo</strong>
-                    <p>@_equipment.Model</p>
-                </div>
-
-                <!-- Número de Série -->
-                <div class="col-md-3">
-                    <strong>Número de Série</strong>
-                    <p>@_equipment.SerialNumber</p>
-                </div>
-
-                <!-- Processador -->
-                <div class="col-md-3">
-                    <strong>Processador</strong>
-                    <p>@_equipment.Processor</p>
-                </div>
-
-                <!-- Memória RAM -->
-                <div class="col-md-3">
-                    <strong>Memória RAM</strong>
-                    <p>@_equipment.MemoryRAM</p>
+                            <!-- Utilizador -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bolder">Utilizador</label>
+                                <p class="form-control-plaintext">@_equipment.User</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
-                <!-- Armazenamento -->
-                <div class="col-md-3">
-                    <strong>Armazenamento</strong>
-                    <p>@_equipment.Storage</p>
+                <!-- Secção: Identificação do Equipamento -->
+                <div class="card mb-4">
+                    <div class="card-header bg-warning text-black">
+                        <h5 class="mb-0">Identificação do Equipamento</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-4">
+                            <!-- Categoria -->
+                            <div class="col-md-3">
+                                <label class="form-label fw-bolder">Categoria</label>
+                                <p class="form-control-plaintext">@_equipment.Category</p>
+                            </div>
+
+                            <!-- Fabricante -->
+                            <div class="col-md-3">
+                                <label class="form-label fw-bolder">Fabricante</label>
+                                <p class="form-control-plaintext">@_equipment.Manufacturer</p>
+                            </div>
+
+                            <!-- Modelo -->
+                            <div class="col-md-3">
+                                <label class="form-label fw-bolder">Modelo</label>
+                                <p class="form-control-plaintext">@_equipment.Model</p>
+                            </div>
+
+                            <!-- Número de Série -->
+                            <div class="col-md-3">
+                                <label class="form-label fw-bolder">Número de Série</label>
+                                <p class="form-control-plaintext">@_equipment.SerialNumber</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Sistema Operativo -->
-                <div class="col-md-3">
-                    <strong>Sistema Operativo</strong>
-                    <p>@_equipment.OperatingSystem</p>
+                <!-- Secção: Especificações Técnicas -->
+                <div class="card mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">Especificações Técnicas</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-4">
+                            <!-- Processador -->
+                            <div class="col-md-3">
+                                <label class="form-label fw-bolder">Processador</label>
+                                <p class="form-control-plaintext">@_equipment.Processor</p>
+                            </div>
+
+                            <!-- Memória RAM -->
+                            <div class="col-md-3">
+                                <label class="form-label fw-bolder">Memória RAM</label>
+                                <p class="form-control-plaintext">@_equipment.MemoryRAM</p>
+                            </div>
+
+                            <!-- Armazenamento -->
+                            <div class="col-md-3">
+                                <label class="form-label fw-bolder">Armazenamento</label>
+                                <p class="form-control-plaintext">@_equipment.Storage</p>
+                            </div>
+
+                            <!-- Sistema Operativo -->
+                            <div class="col-md-3">
+                                <label class="form-label fw-bolder">Sistema Operativo</label>
+                                <p class="form-control-plaintext">@_equipment.OperatingSystem</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Secção: Manutenção -->
-    <div class="card mb-3">
-        <div class="card-header bg-light">
-            <h5 class="mb-0 fw-bold">Manutenção</h5>
-        </div>
-
-        <div class="card-body">
-            <div class="row">
                 
-                <!-- Avaria -->
-                <div class="col-md-6">
-                    <strong>Avaria</strong>
-                    <p>@_equipment.Damage</p>
+                <!-- Secção: Manutenção -->
+                <div class="card mb-4">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="mb-0">Manutenção</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-1">
+                            <!-- Avaria -->
+                            <div class="col-md-12">
+                                <label class="form-label fw-bolder">Avaria</label>
+                                <p class="form-control-plaintext">@_equipment.Damage</p>
+                            </div>
+
+                            <!-- Observação -->
+                            <div class="col-md-12">
+                                <label class="form-label fw-bolder">Observação</label>
+                                <p class="form-control-plaintext">@_equipment.Note</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Observação -->
-                <div class="col-md-6">
-                    <strong>Observação</strong>
-                    <p>@_equipment.Note</p>
+                <!-- Botões de Ação -->
+                <div class="d-flex flex-wrap gap-2 justify-content-end">
+                    <!-- Editar -->
+                    <a href="@($"/editar_equipamento/{_equipment.Id}")" class="btn btn-primary">Editar</a>
+                    
+                    <!-- Exportar para PDF -->
+                    <button type="submit" class="btn btn-success" @onclick="DownloadPdf">
+                        @if (_loading)
+                        {
+                            <span class="spinner-border spinner-border-sm"></span>
+                        }
+                        else
+                        {
+                            <span>Exportar para PDF</span>
+                        }
+                    </button>
+                    
+                    <!-- Remover -->
+                    <button type="submit" class="btn btn-danger" @onclick="() => { _removeConfirmationModal?.Show(); }">
+                        Remover
+                    </button>
                 </div>
-            </div>
+            }
         </div>
     </div>
-    
-    <!-- Rodapé -->
-    <div class="modal-footer">
-        <button type="submit" class="btn btn-success" @onclick="ExportToPdf">PDF</button>
-        <button type="submit" class="btn btn-success" @onclick="ExportToExcel">Excel</button>
-    </div>
-}
+</div>
 
-<FeedbackToast Message="@_message"/>
+<RemoveConfirmationModal 
+    @ref="_removeConfirmationModal" 
+    RemoveEquipment="@(() => RemoveEquipment(Id))" />
+
+<FeedbackToast Success="@_success" Message="@_message"/>
 
 @code {
     [Parameter] public int Id { get; set; }
     private Equipment? _equipment;
     private bool _success;
     private string? _message;
+    private bool _loading;
+    private RemoveConfirmationModal? _removeConfirmationModal;
 
+    /// <summary>
+    /// Carrega os dados do equipamento com base no ID fornecido.
+    /// Se ocorrer um erro durante o carregamento, exibe uma mensagem de erro.
+    /// </summary>
     protected override async Task OnInitializedAsync()
     {
         try
         {
             _equipment = await Operation.FindEquipmentByIdAsync(Id);
-            _success = true;
         }
-        catch (Exception error)
+        catch
         {
             _success = false;
-            _message = $"Erro ao carregar o equipamento {Id}." +
-                       $"\nErro: {error.Message}";
+            _message = "Erro ao carregar os dados do equipamento. Tente novamente.";
         }
     }
 
-    /// <summary>
-    /// Exporta o equipamento para PDF.
-    /// </summary>
-    private async Task ExportToPdf()
+    private async Task DownloadPdf()
     {
-        if (_equipment is null) return;
-        await ExportPdf.ExportEquipmentToPdfAndNavigate(_equipment);
+        try
+        {
+            _loading = true;
+            
+            await Task.Delay(1000);
+            await ExportPdf.ExportEquipmentToPdfAndNavigate(_equipment);
+        }
+        catch
+        {
+            _success = false;
+            _message = "Erro ao exportar os dados do equipamento para PDF. Tente novamente.";
+        }
+        finally
+        {
+            _loading = false;
+        }
     }
 
-    /// <summary>
-    /// Exporta o equipamento para Excel.
-    /// </summary>
-    private async Task ExportToExcel()
+    private async void RemoveEquipment(int idEquipment)
     {
-        if (_equipment is null) return;
-        await ExportExcel.ExportEquipmentToExcelAndNavigate(_equipment);
+        try
+        {
+            bool removeEquipment = await Operation.RemoveEquipmentAsync(idEquipment);
+            if (removeEquipment)
+            {
+                _success = true;
+                _message = "Equipamento removido.";
+                Navigation.NavigateTo("/");
+            }
+            else
+            {
+                _success = false;
+                _message = "Equipamento não encontrado.";
+            }
+        }
+        catch
+        {
+            _success = false;
+            _message = "Erro durante o processo de remoção do equipamento. Tente novamente.";
+        }
     }
-
 }

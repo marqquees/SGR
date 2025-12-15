@@ -1,7 +1,7 @@
 @if (!string.IsNullOrEmpty(Message))
 {
     <div class="toast-container position-fixed bottom-0 start p-2">
-        <div class="toast show @(Success ? "bg-success" : "bg-danger") text-white" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast show @(Success ? "bg-success" : "bg-danger") text-white" aria-live="assertive" aria-atomic="true">
             <div class="d-flex">
                 <div class="toast-body">
                     <i class="bi @(Success ? "bi-check-circle" : "bi-exclamation-triangle")"></i>

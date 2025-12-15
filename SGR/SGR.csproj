@@ -9,17 +9,17 @@
 
     <ItemGroup>
         <PackageReference Include="ClosedXML" Version="0.105.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid" Version="10.0.6" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.6">
+        <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid" Version="10.0.7" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.7">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.6" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.7" />
         <PackageReference Include="QuestPDF" Version="2026.2.4" />
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="wwwroot\temp-pdf\"/>
+        <Folder Include="wwwroot\temp_pdf\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -39,6 +39,17 @@
       <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\bootstrap.js.map" />
       <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\bootstrap.min.js" />
       <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\bootstrap.min.js.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\temp-excel\Equipamento_1_20260324145432.xlsx" />
+      <_ContentIncludedByDefault Remove="wwwroot\temp-excel\Equipamento_34_20251023093125.xlsx" />
+      <_ContentIncludedByDefault Remove="wwwroot\temp-excel\Equipamento_34_20251023094345.xlsx" />
+      <_ContentIncludedByDefault Remove="wwwroot\temp-excel\Equipamento_34_20251023094957.xlsx" />
+      <_ContentIncludedByDefault Remove="wwwroot\temp-excel\Equipamento_34_20251023095022.xlsx" />
+      <_ContentIncludedByDefault Remove="wwwroot\temp-excel\Equipamento_36_20251023101321.xlsx" />
+      <_ContentIncludedByDefault Remove="wwwroot\temp-excel\Equipamento_37_20251028150532.xlsx" />
+      <_ContentIncludedByDefault Remove="wwwroot\temp-excel\Equipamento_38_20251209130503.xlsx" />
+      <_ContentIncludedByDefault Remove="wwwroot\temp-excel\Equipamento_3_20251006105137.xlsx" />
+      <_ContentIncludedByDefault Remove="wwwroot\temp-excel\Equipamento_3_20251006124505.xlsx" />
+      <_ContentIncludedByDefault Remove="wwwroot\temp-excel\Equipamento_3_20251006124523.xlsx" />
     </ItemGroup>
 
     <ItemGroup>

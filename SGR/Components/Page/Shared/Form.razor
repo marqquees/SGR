@@ -1,5 +1,4 @@
 ﻿@using SGR.Models
-@inject NavigationManager Navigation
 
 <div class="container-fluid py-4">
     <div class="row justify-content-center">
@@ -195,32 +194,25 @@
 
             <!-- Botões de Ação -->
             <div class="card-body">
-                <!-- Cancelar -->
                 <div class="d-flex gap-2 justify-content-end">
+                    <!-- Cancelar -->
                     @if (ShowCancelButton)
                     {
-                        <button type="button" class="btn btn-outline-secondary" @onclick="Cancel">
-                            <i class="bi bi-arrow-left"></i> Cancelar
-                        </button>
+                        <a href="/" class="btn btn-outline-danger">Cancelar</a>
                     }
 
                     <!-- Limpar Formulário -->
-                    <button type="button" class="btn btn-outline-secondary" @onclick="ClearDataForm">
-                        <i class="bi bi-x-circle"></i> Limpar
-                    </button>
+                    <button type="button" class="btn btn-outline-secondary" @onclick="ClearDataForm">Limpar</button>
 
                     <!-- Adicionar -->
                     <button type="submit" class="btn btn-primary">
                         @if (Loading)
                         {
-                            <span class="spinner-border spinner-border-sm me-2" role="status">
-                                @SecondaryButtonText
-                            </span>
+                            <span class="spinner-border spinner-border-sm me-2"></span>
                         }
                         else
                         {
-                            <i class="bi bi-check-circle"></i>
-                            <span>@PrimaryButtonText</span>
+                            <span>@ButtonText</span>
                         }
                     </button>
                 </div>
@@ -232,8 +224,7 @@
 @code {
     [Parameter] public Equipment Equipment { get; set; } = new();
     [Parameter] public bool Loading { get; set; }
-    [Parameter] public string? PrimaryButtonText { get; set; }
-    [Parameter] public string? SecondaryButtonText { get; set; }
+    [Parameter] public string? ButtonText { get; set; }
     [Parameter] public bool ShowCancelButton { get; set; }
 
     protected override void OnInitialized()
@@ -246,11 +237,6 @@
     {
         Equipment = new Equipment();
         OnInitialized();
-    }
-
-    private void Cancel()
-    {
-        Navigation.NavigateTo("/");
     }
 }
 
