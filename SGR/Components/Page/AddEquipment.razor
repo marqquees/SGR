@@ -1,0 +1,58 @@
+﻿@page "/adicionar_equipamento"
+@rendermode InteractiveServer
+
+@using SGR.Components.Page.Shared
+@using SGR.Models
+@using SGR.Services
+
+@inject EquipmentOperation Operation
+
+<PageTitle>Adicionar Equipamento</PageTitle>
+
+<EditForm Model="@_equipment" OnValidSubmit="@SubmitEquipment" class="needs-validation">
+    <DataAnnotationsValidator/>
+
+    <Form Equipment="@_equipment"
+          Loading="@_loading"
+          PrimaryButtonText="Salvar"
+          SecondaryButtonText="Salvando...">
+    </Form>
+</EditForm>
+
+<FeedbackToast Success="@_success" Message="@_message"/>
+
+
+@code {
+    private readonly Equipment _equipment = new();
+    private string? _message;
+    private bool _success;
+    private bool _loading;
+
+    /// <summary>
+    /// Submete o formulário para adicionar um novo equipamento.
+    /// Durante a submissão, exibe um indicador de carregamento e, após a conclusão, mostra uma mensagem de sucesso ou erro.
+    /// </summary>
+    private async Task SubmitEquipment()
+    {
+        try
+        {
+            _loading = true;
+
+            await Operation.AddEquipmentAsync(_equipment);
+
+            _success = true;
+            _message = "Equipamento adicionado!";
+        }
+        catch
+        {
+            _success = false;
+            _message = "Ocorreu um erro inesperado. Tente novamente.";
+        }
+        finally
+        {
+            _loading = false;
+            await Task.Delay(2000);
+        }
+    }
+
+}

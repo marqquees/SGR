@@ -1,0 +1,193 @@
+@page "/detalhe-equipamento/{Id:int}"
+@rendermode InteractiveServer
+
+@using SGR.Components.Page.Shared
+@using SGR.Helper
+@using SGR.Models
+@using SGR.Services
+
+@inject EquipmentOperation Operation
+@inject ExportToPdf ExportPdf
+@inject ExportToExcel ExportExcel
+
+@if (_equipment != null)
+{
+    <!-- Secção: Controlo -->
+    <div class="card mb-3">
+        <div class="card-header bg-light">
+            <h5 class="mb-0 fw-bold">Controlo</h5>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                
+                <!-- Data de Registo -->
+                <div class="col-md-4">
+                    <strong>Data de Registo</strong>
+                    <p>@_equipment.DateRegister.ToString("dd/MM/yyyy")</p>
+                </div>
+
+                <!-- Estado -->
+                <div class="col-md-4">
+                    <strong>Estado</strong>
+                    <p>
+                        <span class="badge @EquipmentUi.GetStateBadgeClass(_equipment.State!)">
+                            @_equipment.State
+                        </span>
+                    </p>
+                </div>
+
+                <!-- Responsável -->
+                <div class="col-md-4">
+                    <strong>Responsável</strong>
+                    <p>@_equipment.Responsible</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Secção: Especificações Técnicas -->
+    <div class="card mb-3">
+        <div class="card-header bg-light">
+            <h5 class="mb-0 fw-bold">Especificações Técnicas</h5>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                
+                <!-- Cliente -->
+                <div class="col-md-3">
+                    <strong>Cliente</strong>
+                    <p>@_equipment.Customer</p>
+                </div>
+
+                <!-- Utilizador -->
+                <div class="col-md-3">
+                    <strong>Utilizador</strong>
+                    <p>@_equipment.User</p>
+                </div>
+
+                <!-- Categoria -->
+                <div class="col-md-3">
+                    <strong>Categoria</strong>
+                    <p>@_equipment.Category</p>
+                </div>
+
+                <!-- Fabricante -->
+                <div class="col-md-3">
+                    <strong>Fabricante</strong>
+                    <p>@_equipment.Manufacturer</p>
+                </div>
+
+                <!-- Modelo -->
+                <div class="col-md-3">
+                    <strong>Modelo</strong>
+                    <p>@_equipment.Model</p>
+                </div>
+
+                <!-- Número de Série -->
+                <div class="col-md-3">
+                    <strong>Número de Série</strong>
+                    <p>@_equipment.SerialNumber</p>
+                </div>
+
+                <!-- Processador -->
+                <div class="col-md-3">
+                    <strong>Processador</strong>
+                    <p>@_equipment.Processor</p>
+                </div>
+
+                <!-- Memória RAM -->
+                <div class="col-md-3">
+                    <strong>Memória RAM</strong>
+                    <p>@_equipment.MemoryRAM</p>
+                </div>
+                
+                <!-- Armazenamento -->
+                <div class="col-md-3">
+                    <strong>Armazenamento</strong>
+                    <p>@_equipment.Storage</p>
+                </div>
+
+                <!-- Sistema Operativo -->
+                <div class="col-md-3">
+                    <strong>Sistema Operativo</strong>
+                    <p>@_equipment.OperatingSystem</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Secção: Manutenção -->
+    <div class="card mb-3">
+        <div class="card-header bg-light">
+            <h5 class="mb-0 fw-bold">Manutenção</h5>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                
+                <!-- Avaria -->
+                <div class="col-md-6">
+                    <strong>Avaria</strong>
+                    <p>@_equipment.Damage</p>
+                </div>
+
+                <!-- Observação -->
+                <div class="col-md-6">
+                    <strong>Observação</strong>
+                    <p>@_equipment.Note</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Rodapé -->
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-success" @onclick="ExportToPdf">PDF</button>
+        <button type="submit" class="btn btn-success" @onclick="ExportToExcel">Excel</button>
+    </div>
+}
+
+<FeedbackToast Message="@_message"/>
+
+@code {
+    [Parameter] public int Id { get; set; }
+    private Equipment? _equipment;
+    private bool _success;
+    private string? _message;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _equipment = await Operation.FindEquipmentByIdAsync(Id);
+            _success = true;
+        }
+        catch (Exception error)
+        {
+            _success = false;
+            _message = $"Erro ao carregar o equipamento {Id}." +
+                       $"\nErro: {error.Message}";
+        }
+    }
+
+    /// <summary>
+    /// Exporta o equipamento para PDF.
+    /// </summary>
+    private async Task ExportToPdf()
+    {
+        if (_equipment is null) return;
+        await ExportPdf.ExportEquipmentToPdfAndNavigate(_equipment);
+    }
+
+    /// <summary>
+    /// Exporta o equipamento para Excel.
+    /// </summary>
+    private async Task ExportToExcel()
+    {
+        if (_equipment is null) return;
+        await ExportExcel.ExportEquipmentToExcelAndNavigate(_equipment);
+    }
+
+}

@@ -1,0 +1,121 @@
+@page "/"
+@rendermode InteractiveServer
+
+@using SGR.Components.Page.Shared
+@using SGR.Helper
+@using SGR.Models
+@using SGR.Services
+@using Microsoft.AspNetCore.Components.QuickGrid
+
+@inject EquipmentOperation Operation
+
+<PageTitle>Equipamentos Registados</PageTitle>
+
+<div class="container-fluid py-4">
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h6 class="mb-0">Equipamentos Registados</h6>
+
+            <div>
+                <input type="search"
+                       class="form-control"
+                       placeholder="pesquisar..."
+                       @bind-value="_searchTerm"
+                       @bind-value:event="oninput"
+                       @onkeyup="FilterEquipment" />
+            </div>
+        </div>
+
+        @if (!_equipment.Any())
+        {
+            <div class="d-flex justify-content-center align-items-center p-4">
+                <div class="alert alert-info d-flex gap-2 mb-0" role="alert">
+                    <i class="bi bi-info-circle-fill"></i>
+                    <span>Nenhum equipamento registado.</span>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="card-body">
+                <div class="table-responsive">
+                    <QuickGrid 
+                        Items="@_filterEquipment.AsQueryable()" 
+                        Pagination="@_state"
+                        Class="table table-borderless align-middle">
+                        <PropertyColumn Property="@(e => e.Customer)" Title="Cliente" />
+                        <PropertyColumn Property="@(e => e.Category)" Title="Categoria" />
+                        <PropertyColumn Property="@(e => e.Manufacturer)" Title="Fabricante" />
+                        <PropertyColumn Property="@(e => e.Processor)" Title="Processador" />
+                        <PropertyColumn Property="@(e => e.MemoryRAM)" Title="Memória RAM" />
+                        <PropertyColumn Property="@(e => e.SerialNumber)" Title="Número de Série" />
+                        <TemplateColumn Title="Estado">
+                            <span class="badge @EquipmentUi.GetStateBadgeClass(context.State!)">
+                                @context.State
+                            </span>
+                        </TemplateColumn>
+                        <PropertyColumn Property="@(e => e.Responsible)" Title="Responsável" />
+                        <TemplateColumn Title="Ações">
+                            <a class="btn btn-info btn-sm" href=@($"/detalhe-equipamento/{context.Id}")>Detalhes</a>
+                        </TemplateColumn>
+                    </QuickGrid>
+                </div>
+                <Paginator State="@_state"/>
+            </div>
+        }
+    </div>
+</div>
+
+<FeedbackToast Success="@_success" Message="@_message"/>
+
+@code {
+    private List<Equipment> _equipment = [];
+    private List<Equipment> _filterEquipment = [];
+    private bool _success;
+    private string? _message;
+    private string? _searchTerm;
+    private readonly PaginationState _state = new() { ItemsPerPage = 20 };
+
+    /// <summary>
+    /// Carrega a lista de equipamentos ao inicializar a página/componente.
+    /// Tenta obter os equipamentos usando o serviço de operação e, em caso de falha,
+    /// define uma mensagem de erro para o usuário.
+    /// </summary>
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _filterEquipment = _equipment = await Operation.ListEquipmentAsync();
+        }
+        catch
+        {
+            _success = false;
+            _message = "Não foi possível carregar a lista de equipamentos. ";
+        }
+    }
+    
+    /// <summary>
+    /// Filtra a lista de equipamentos com base no termo de pesquisa fornecido.
+    /// O filtro é aplicado a vários campos do equipamento, como cliente, categoria, fabricante, processador, entre outras.
+    /// Se o termo de pesquisa estiver vazio ou nulo, a lista completa de equipamentos é exibida.
+    /// </summary>
+    private void FilterEquipment()
+    {
+        if (string.IsNullOrWhiteSpace(_searchTerm))
+        {
+            _filterEquipment = _equipment.ToList();
+            return;
+        }
+
+        _filterEquipment = _equipment.Where(equipment =>
+            equipment.Customer?.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase) == true ||
+            equipment.Category?.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase) == true ||
+            equipment.Manufacturer?.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase) == true ||
+            equipment.Processor?.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase) == true ||
+            equipment.MemoryRAM?.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase) == true ||
+            equipment.SerialNumber?.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase) == true ||
+            equipment.State?.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase) == true ||
+            equipment.Responsible?.Contains(_searchTerm, StringComparison.OrdinalIgnoreCase) == true
+        ).ToList();
+    }
+}

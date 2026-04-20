@@ -1,5 +1,5 @@
 ﻿@using SGR.Helper
-@using SGR.Model
+@using SGR.Models
 
 <!-- Fluxo de Fases do Equipamento -->
 <div class="workflow-container workflow-compact">
@@ -7,7 +7,7 @@
         @{
             var phases = GetWorkflowPhases();
         }
-        @for (int i = 0; i < phases.Count; i++)
+        @for (var i = 0; i < phases.Count; i++)
         {
             var phase = phases[i];
             var isActive = EquipmentLifecycle.IsPhaseActive(Equipment.State, phase.State);
@@ -65,7 +65,7 @@
                             @onchange="ValidateStateTransition">
                         @foreach (var state in OptionForm.State)
                         {
-                            bool isValid = EquipmentLifecycle.IsValidTransition(_currentState, state);
+                            var isValid = EquipmentLifecycle.IsValidTransition(_currentState, state);
                             <option value="@state"
                                     disabled="@(!isValid && state != _currentState)"
                                     class="@(isValid || state == _currentState ? "" : "text-muted")">
@@ -100,9 +100,11 @@
                 <div class="alert alert-warning mt-2 mb-0" role="alert">
                     <small>
                         <strong>Transição Inválida:</strong>
-                        Não é possível transitar de "<strong>@_currentState</strong>" para "<strong>@Equipment.State</strong>".
+                        Não é possível transitar de "<strong>@_currentState</strong>" para
+                        "<strong>@Equipment.State</strong>".
                         <br>
-                        <span class="text-muted">Estados válidos: @string.Join(", ", EquipmentLifecycle.GetValidNextStates(_currentState))</span>
+                        <span
+                            class="text-muted">Estados válidos: @string.Join(", ", EquipmentLifecycle.GetValidNextStates(_currentState))</span>
                     </small>
                 </div>
             }
@@ -111,38 +113,42 @@
 </div>
 
 @code {
-    /// <summary>
-    /// Item do equipamento para o qual seré exibido o ciclo de vida.
-    /// </summary>
-    [Parameter] public Equipment Equipment { get; set; } = null!;
 
     /// <summary>
-    /// Indica se o componente esté em modo de edição.
+    ///     Item do equipamento para o qual seré exibido o ciclo de vida.
     /// </summary>
-    [Parameter] public bool IsEditing { get; set; }
+    [Parameter]
+    public Equipment Equipment { get; set; } = null!;
 
     /// <summary>
-    /// Callback executado quando uma mudança de estado é detectada.
+    ///     Indica se o componente esté em modo de edição.
     /// </summary>
-    [Parameter] public EventCallback<string> OnStateChanged { get; set; }
+    [Parameter]
+    public bool IsEditing { get; set; }
 
     /// <summary>
-    /// Estado original do equipamento para validação de transições.
+    ///     Callback executado quando uma mudança de estado é detectada.
+    /// </summary>
+    [Parameter]
+    public EventCallback<string> OnStateChanged { get; set; }
+
+    /// <summary>
+    ///     Estado original do equipamento para validação de transições.
     /// </summary>
     private string? _currentState;
 
     /// <summary>
-    /// Indica se a transição de estado atual é válida.
+    ///     Indica se a transição de estado atual é válida.
     /// </summary>
     private bool _isValidTransition = true;
 
     /// <summary>
-    /// Modelo para representar uma fase do workflow.
+    ///     Modelo para representar uma fase do workflow.
     /// </summary>
     private record WorkflowPhase(string State);
 
     /// <summary>
-    /// Método executado na inicialização do componente.
+    ///     Método executado na inicialização do componente.
     /// </summary>
     protected override void OnInitialized()
     {
@@ -151,7 +157,7 @@
     }
 
     /// <summary>
-    /// Método executado quando os parâmetros do componente são atualizados.
+    ///     Método executado quando os parâmetros do componente são atualizados.
     /// </summary>
     protected override void OnParametersSet()
     {
@@ -164,7 +170,7 @@
     }
 
     /// <summary>
-    /// Obtém as fases do workflow em ordem sequencial.
+    ///     Obtém as fases do workflow em ordem sequencial.
     /// </summary>
     /// <returns>Lista de fases do workflow.</returns>
     private List<WorkflowPhase> GetWorkflowPhases()
@@ -179,19 +185,19 @@
     }
 
     /// <summary>
-    /// Verifica se um conector deve ser marcado como concluído.
+    ///     Verifica se um conector deve ser marcado como concluído.
     /// </summary>
     /// <param name="connectorIndex">índice do conector (posição da fase atual).</param>
     /// <returns>True se o conector deve ser concluído.</returns>
     private bool IsConnectorCompleted(int connectorIndex)
     {
-        int currentPhaseIndex = EquipmentLifecycle.GetPhaseIndex(Equipment.State);
+        var currentPhaseIndex = EquipmentLifecycle.GetPhaseIndex(Equipment.State);
 
         return currentPhaseIndex > connectorIndex && currentPhaseIndex != -1;
     }
 
     /// <summary>
-    /// Obtém a classe CSS apropriada para uma fase.
+    ///     Obtém a classe CSS apropriada para uma fase.
     /// </summary>
     /// <param name="phaseState">Estado da fase.</param>
     /// <param name="isActive">Se a fase está ativa.</param>
@@ -204,14 +210,14 @@
             phaseState.Trim().ToUpperInvariant() == "EM REPARAÇÃO")
             return "active waiting";
 
-        if (isActive) 
+        if (isActive)
             return "active";
 
         return !isCompleted ? "pending" : "completed";
     }
 
     /// <summary>
-    /// Valida a transição de estado quando o valor é alterado.
+    ///     Valida a transição de estado quando o valor é alterado.
     /// </summary>
     /// <param name="e">Evento de mudança contendo o novo estado.</param>
     private async Task ValidateStateTransition(ChangeEventArgs e)
@@ -230,7 +236,7 @@
     }
 
     /// <summary>
-    /// Reinicia o estado original para cancelar alterações.
+    ///     Reinicia o estado original para cancelar alterações.
     /// </summary>
     public void ResetToOriginalState()
     {
@@ -240,11 +246,12 @@
     }
 
     /// <summary>
-    /// Obtém se o estado atual é valido para salvar.
+    ///     Obtém se o estado atual é valido para salvar.
     /// </summary>
     /// <returns>True se a transição for válida, false caso contrário.</returns>
     public bool IsCurrentStateValid()
     {
         return _isValidTransition;
     }
+
 }

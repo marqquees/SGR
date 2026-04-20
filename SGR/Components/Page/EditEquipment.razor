@@ -1,16 +1,16 @@
-﻿@page "/editar-equipamento/{id:int}"
+﻿@page "/editar-equipamento/{Id:int}"
 @rendermode InteractiveServer
 
-@using SGR.Components.Shared
-@using SGR.Model
-@using SGR.Service
+@using SGR.Components.Page.Shared
+@using SGR.Models
+@using SGR.Services
 
 @inject EquipmentOperation Operation
 @inject NavigationManager Navigation
 
 <PageTitle>Editar Equipamento</PageTitle>
 
-@if (_equipment == null)
+@if (_equipment is null)
 {
     <div class="d-flex justify-content-center my-5">
         <div class="spinner-border text-primary" role="status">
@@ -23,7 +23,7 @@ else
     <EditForm Model="@_equipment"
               OnValidSubmit="UpdateEquipment"
               FormName="editEquipmentContextForm" class="needs-validation">
-        <DataAnnotationsValidator />
+        <DataAnnotationsValidator/>
 
         <Form Equipment="_equipment"
               Loading="_loading"
@@ -33,10 +33,8 @@ else
         </Form>
     </EditForm>
 }
-@if (!string.IsNullOrEmpty(_message))
-{
-    <InfoModal Success="@_success" Message="@_message" />
-}
+
+<FeedbackToast Success="@_success" Message="@_message"/>
 
 @code {
     [Parameter] public int Id { get; set; }
@@ -50,7 +48,7 @@ else
     {
         try
         {
-            _equipment = await Operation.SearchByIdAsync(Id);
+            _equipment = await Operation.FindEquipmentByIdAsync(Id);
             _success = true;
         }
         catch (Exception error)
@@ -66,13 +64,13 @@ else
 
     private async Task UpdateEquipment()
     {
-        if (_equipment == null)
+        if (_equipment is null)
             return;
         try
         {
             _loading = true;
 
-            await Operation.UpdateEquipmentAsync(_equipment);
+            await Operation.UpdateDataEquipmentAsync(_equipment);
 
             _message = $"Equipamento {_equipment.Id} atualizado com sucesso!";
             _success = true;
@@ -94,4 +92,5 @@ else
             _message = string.Empty;
         }
     }
+
 }

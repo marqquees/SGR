@@ -1,36 +1,40 @@
 using Microsoft.EntityFrameworkCore;
 using SGR.Components;
 using SGR.Data;
-using SGR.Service;
+using SGR.Models;
+using SGR.Services;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Adicionar serviços ao container.
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
-builder.Services.AddControllers();
 
-// Configurar o DbContext para usar SQL Server com a string de conexão.
-builder.Services.AddDbContext<EquipmentContext>(options => 
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectionWindows")));
+// Configurar o DbContext para usar SQLite.
+builder.Services.AddDbContext<EquipmentContext>(option => 
+    option.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Serviço de Gerenciamento do Inventário.
 builder.Services.AddScoped<EquipmentOperation>();
-// Serviço Gerenciador de Modais para a interface do usuário.
-builder.Services.AddScoped<ModalManager>();
+
 // Serviço de Limpeza de Arquivos Temporários.
 builder.Services.AddHostedService<TempFileCleanup>();
 
-var app = builder.Build();
+// Serviços de Exportação.
+builder.Services.AddScoped<ExportToPdf>();
+builder.Services.AddScoped<ExportToExcel>();
 
-// Configurar o papeline de solicitações HTTP.
-if (!app.Environment.IsDevelopment())
+WebApplication app = builder.Build();
+
+// Aplica as migrações pendentes a base de dados.
+using (IServiceScope scope = app.Services.CreateScope())
 {
-    app.UseExceptionHandler("/Erro", createScopeForErrors: true);
-    app.UseHsts();
+    DbContext db = scope.ServiceProvider.GetRequiredService<EquipmentContext>();
+    db.Database.Migrate();
 }
 
-app.UseHttpsRedirection();
-app.MapControllers();
+// Configurar o papeline de solicitações HTTP.
+if (!app.Environment.IsDevelopment()) app.UseHsts();
+
 app.UseStaticFiles();
 app.UseAntiforgery();
 app.MapRazorComponents<App>().AddInteractiveServerRenderMode();

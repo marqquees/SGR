@@ -1,0 +1,256 @@
+﻿@using SGR.Models
+@inject NavigationManager Navigation
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-11 col-xl-12">
+            <!-- Secção: Controlo -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Controlo</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <!-- Data do Registo -->
+                        <div class="col-md-4">
+                            <label class="form-label fw-bolder">Data do Registo</label>
+                            <InputDate @bind-Value="Equipment.DateRegister" class="form-control"/>
+                            <ValidationMessage For="@(() => Equipment.DateRegister)" class="text-danger small mt-1"/>
+                        </div>
+
+                        <!-- Estado do Equipamento -->
+                        <div class="col-md-4">
+                            <label class="form-label fw-bolder">Estado do Equipamento</label>
+                            <InputSelect @bind-Value="Equipment.State" class="form-select">
+                                <option>Selecione...</option>
+                                @foreach (string state in OptionForm.State)
+                                {
+                                    <option value="@state">@state</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => Equipment.State)" class="text-danger small mt-1"/>
+                        </div>
+
+                        <!-- Responsável -->
+                        <div class="col-md-4">
+                            <label class="form-label fw-bolder">Responsável</label>
+                            <InputSelect @bind-Value="Equipment.Responsible" class="form-select">
+                                <option>Selecione...</option>
+                                @foreach (string responsible in OptionForm.Responsible)
+                                {
+                                    <option value="@responsible">@responsible</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => Equipment.Responsible)" class="text-danger small mt-1"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Secção: Cliente e Utilizador -->
+            <div class="card mb-4">
+                <div class="card-header bg-info text-black">
+                    <h5 class="mb-0">Cliente e Utilizador</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-2">
+                        <!-- Cliente -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-bolder">Cliente</label>
+                            <InputSelect @bind-Value="Equipment.Customer" class="form-select">
+                                <option>Selecione...</option>
+                                @foreach (string customer in OptionForm.Customer)
+                                {
+                                    <option value="@customer">@customer</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => Equipment.Customer)" class="text-danger small mt-1"/>
+                        </div>
+
+                        <!-- Utilizador -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-bolder">Utilizador</label>
+                            <InputText @bind-Value="Equipment.User" class="form-control"/>
+                            <ValidationMessage For="@(() => Equipment.User)" class="text-danger small mt-1"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Secção: Identificação do Equipamento -->
+            <div class="card mb-4">
+                <div class="card-header bg-warning text-black">
+                    <h5 class="mb-0">Identificação do Equipamento</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        <!-- Categoria -->
+                        <div class="col-md-3">
+                            <label class="form-label fw-bolder">Categoria</label>
+                            <InputSelect @bind-Value="Equipment.Category" class="form-select">
+                                <option>Selecione...</option>
+                                @foreach (string category in OptionForm.Category)
+                                {
+                                    <option value="@category">@category</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => Equipment.Category)" class="text-danger small"/>
+                        </div>
+
+                        <!-- Marca -->
+                        <div class="col-md-3">
+                            <label class="form-label fw-bolder">Marca</label>
+                            <InputSelect @bind-Value="Equipment.Manufacturer" class="form-select">
+                                <option>Selecione...</option>
+                                @foreach (string manufacturer in OptionForm.Manufacturer)
+                                {
+                                    <option value="@manufacturer">@manufacturer</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => Equipment.Manufacturer)" class="text-danger small"/>
+                        </div>
+
+                        <!-- Modelo -->
+                        <div class="col-md-3">
+                            <label class="form-label fw-bolder">Modelo</label>
+                            <InputText @bind-Value="Equipment.Model" class="form-control"/>
+                            <ValidationMessage For="@(() => Equipment.Model)" class="text-danger small"/>
+                        </div>
+
+                        <!-- Número de Série -->
+                        <div class="col-md-3">
+                            <label class="form-label fw-bolder">Número de Série</label>
+                            <InputText @bind-Value="Equipment.SerialNumber" class="form-control"/>
+                            <ValidationMessage For="@(() => Equipment.SerialNumber)" class="text-danger small"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Secção: Especificações Técnicas -->
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Especificações Técnicas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        <!-- Processador -->
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">Processador</label>
+                            <InputText @bind-Value="Equipment.Processor" class="form-control"/>
+                            <ValidationMessage For="@(() => Equipment.Processor)" class="text-danger small"/>
+                        </div>
+
+                        <!-- Memória RAM -->
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">Memória RAM</label>
+                            <InputText @bind-Value="Equipment.MemoryRAM" class="form-control"/>
+                            <ValidationMessage For="@(() => Equipment.MemoryRAM)" class="text-danger small"/>
+                        </div>
+
+                        <!-- Armazenamento -->
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">Armazenamento</label>
+                            <InputText @bind-Value="Equipment.Storage" class="form-control"/>
+                            <ValidationMessage For="@(() => Equipment.Storage)" class="text-danger small"/>
+                        </div>
+
+                        <!-- Sistema Operativo -->
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">Sistema Operativo</label>
+                            <InputText @bind-Value="Equipment.OperatingSystem" class="form-control"/>
+                            <ValidationMessage For="@(() => Equipment.OperatingSystem)" class="text-danger small"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Secção: Manutenção -->
+            <div class="card mb-4">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">Manutenção</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-1">
+                        <!-- Avaria -->
+                        <div class="col-md-12">
+                            <label class="form-label fw-bolder">Avaria</label>
+                            <InputTextArea @bind-Value="Equipment.Damage"
+                                           class="form-control"
+                                           rows="3"
+                                           placeholder="Descreva as avarias do equipamento..."/>
+                        </div>
+
+                        <!-- Observação -->
+                        <div class="col-md-12">
+                            <label class="form-label fw-bolder">Observação</label>
+                            <InputTextArea @bind-Value="Equipment.Note" 
+                                           class="form-control" 
+                                           rows="2" 
+                                           placeholder="Observações adicionais..."/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botões de Ação -->
+            <div class="card-body">
+                <!-- Cancelar -->
+                <div class="d-flex gap-2 justify-content-end">
+                    @if (ShowCancelButton)
+                    {
+                        <button type="button" class="btn btn-outline-secondary" @onclick="Cancel">
+                            <i class="bi bi-arrow-left"></i> Cancelar
+                        </button>
+                    }
+
+                    <!-- Limpar Formulário -->
+                    <button type="button" class="btn btn-outline-secondary" @onclick="ClearDataForm">
+                        <i class="bi bi-x-circle"></i> Limpar
+                    </button>
+
+                    <!-- Adicionar -->
+                    <button type="submit" class="btn btn-primary">
+                        @if (Loading)
+                        {
+                            <span class="spinner-border spinner-border-sm me-2" role="status">
+                                @SecondaryButtonText
+                            </span>
+                        }
+                        else
+                        {
+                            <i class="bi bi-check-circle"></i>
+                            <span>@PrimaryButtonText</span>
+                        }
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public Equipment Equipment { get; set; } = new();
+    [Parameter] public bool Loading { get; set; }
+    [Parameter] public string? PrimaryButtonText { get; set; }
+    [Parameter] public string? SecondaryButtonText { get; set; }
+    [Parameter] public bool ShowCancelButton { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (Equipment.DateRegister == default)
+            Equipment.DateRegister = DateOnly.FromDateTime(DateTime.Now);
+    }
+
+    private void ClearDataForm()
+    {
+        Equipment = new Equipment();
+        OnInitialized();
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo("/");
+    }
+}
+
